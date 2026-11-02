@@ -62,3 +62,17 @@ describe('createLocalStorageStore', () => {
     expect(store.getSnapshot()).toBe(3)
   })
 })
+
+describe('createLocalStorageStore while nothing is subscribed', () => {
+  it('still picks up changes from another tab', () => {
+    const store = makeStore()
+    const unsubscribe = store.subscribe(() => {})
+    expect(store.getSnapshot()).toBe(0)
+    unsubscribe()
+
+    localStorage.setItem(KEY, '9')
+    window.dispatchEvent(new StorageEvent('storage', { key: KEY }))
+
+    expect(store.getSnapshot()).toBe(9)
+  })
+})

@@ -25,6 +25,7 @@ export function createLocalStorageStore<T>({ key, fallback, parse, onChange }: O
   let value = fallback
   let loaded = false
   const listeners = new Set<() => void>()
+  let listening = false
 
   function readStorage(): T {
     try {
@@ -51,10 +52,14 @@ export function createLocalStorageStore<T>({ key, fallback, parse, onChange }: O
   return {
     subscribe(listener) {
       listeners.add(listener)
-      if (listeners.size === 1) window.addEventListener('storage', handleStorage)
+      // Keep listening even with no subscribers, so the cache never goes stale
+      // while the page that shows this value is not mounted (stores are app-lifetime singletons).
+      if (!listening) {
+        window.addEventListener('storage', handleStorage)
+        listening = true
+      }
       return () => {
         listeners.delete(listener)
-        if (listeners.size === 0) window.removeEventListener('storage', handleStorage)
       }
     },
     getSnapshot() {

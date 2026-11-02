@@ -1,10 +1,10 @@
 import { BedDouble, CalendarDays, Footprints, ListChecks, Plane } from 'lucide-react'
-import { checklistCategories, checklistItems } from '../../data/trip'
 import { localDate } from '../../domain/dates'
 import type { ResolvedDay } from '../../domain/trip'
 import type { Trip } from '../../domain/types'
-import { formatDayMonth, formatTime, pluralize } from '../../shared/lib/format'
+import { formatDayMonth, formatTime } from '../../shared/lib/format'
 import { DifficultyBadge } from '../activities/DifficultyBadge'
+import { ChecklistSummary } from '../checklist/ChecklistSummary'
 import { PreviewCard } from './PreviewCard'
 import styles from './PagePreviews.module.css'
 
@@ -83,16 +83,7 @@ export function PagePreviews({ trip, days }: { trip: Trip; days: ResolvedDay[] }
 
       <li>
         <PreviewCard title="Checklist" icon={<ListChecks aria-hidden="true" size={ICON_SIZE} />} to="/checklist" linkLabel="Ver checklist completo">
-          <ul className={styles.rows}>
-            {checklistCategories.map((category) => (
-              <li key={category.id} className={styles.rowWithBadge}>
-                <span className={styles.primary}>{category.label}</span>
-                <span className={styles.secondary}>
-                  {pluralize(checklistItems.filter((item) => item.category === category.id).length, 'item', 'itens')}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <ChecklistSummary />
         </PreviewCard>
       </li>
     </ul>

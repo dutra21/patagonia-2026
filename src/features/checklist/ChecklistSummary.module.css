@@ -1,0 +1,30 @@
+.rows {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.875rem;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.label {
+  color: var(--color-text-strong);
+  font-weight: 600;
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
