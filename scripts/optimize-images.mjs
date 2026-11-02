@@ -8,7 +8,7 @@ const OUT = 'src/assets/img'
 
 const jobs = [
   // Hero: two widths, AVIF + WebP fallback.
-  ...[720, 1200].flatMap((width) => [
+  ...[720, 1200, 1920].flatMap((width) => [
     { input: 'cover.avif', output: `cover-${width}.avif`, width, format: 'avif', options: { quality: 50 } },
     { input: 'cover.avif', output: `cover-${width}.webp`, width, format: 'webp', options: { quality: 70 } },
   ]),

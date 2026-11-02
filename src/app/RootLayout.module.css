@@ -15,10 +15,26 @@
   transform: none;
 }
 
+/*
+ * Breakout grid: children sit in the centered "content" column; an element can opt
+ * into the full width with grid-column: full (used by the home hero).
+ */
 .main {
-  max-width: var(--content-max);
-  margin: 0 auto;
-  padding: var(--space-5) var(--space-4) calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-6));
+  --gutter: var(--space-4);
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [content-start] min(100% - 2 * var(--gutter), var(--content-max) - 2 * var(--gutter))
+    [content-end] minmax(var(--gutter), 1fr)
+    [full-end];
+  align-content: start;
+  padding: var(--space-5) 0 calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-6));
+}
+
+/* Zero specificity, so any component class can override the column. */
+:where(.main > *) {
+  grid-column: content;
+  min-width: 0;
 }
 
 .main:focus {

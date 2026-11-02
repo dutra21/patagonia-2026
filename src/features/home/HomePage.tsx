@@ -18,9 +18,11 @@ export function HomePage() {
   const now = useNow()
 
   return (
-    <div className={styles.page}>
+    <>
       <title>Patagonia 2026</title>
       <Hero trip={trip} phase={getTripPhase(trip, now)} totalDays={stats.days} />
+
+      <div className={styles.page}>
 
       <HomeSection id="resumo" title="Resumo da viagem">
         <TripStats stats={stats} />
@@ -38,6 +40,7 @@ export function HomePage() {
       <HomeSection id="paginas" title="Páginas">
         <PagePreviews trip={trip} days={itinerary} />
       </HomeSection>
-    </div>
+      </div>
+    </>
   )
 }

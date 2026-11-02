@@ -1,4 +1,6 @@
 import cover1200avif from '../../assets/img/cover-1200.avif'
+import cover1920avif from '../../assets/img/cover-1920.avif'
+import cover1920webp from '../../assets/img/cover-1920.webp'
 import cover1200webp from '../../assets/img/cover-1200.webp'
 import cover720avif from '../../assets/img/cover-720.avif'
 import cover720webp from '../../assets/img/cover-720.webp'
@@ -8,7 +10,7 @@ import { formatDate } from '../../shared/lib/format'
 import { travelerPhotos } from './travelerPhotos'
 import styles from './Hero.module.css'
 
-const SIZES = '(min-width: 72rem) 72rem, 100vw'
+const SIZES = '100vw'
 const names = new Intl.ListFormat('pt-BR', { type: 'conjunction' })
 
 function phaseLabel(phase: TripPhase, totalDays: number): string {
@@ -26,8 +28,8 @@ export function Hero({ trip, phase, totalDays }: { trip: Trip; phase: TripPhase;
   return (
     <div className={styles.hero}>
       <picture>
-        <source type="image/avif" srcSet={`${cover720avif} 720w, ${cover1200avif} 1200w`} sizes={SIZES} />
-        <source type="image/webp" srcSet={`${cover720webp} 720w, ${cover1200webp} 1200w`} sizes={SIZES} />
+        <source type="image/avif" srcSet={`${cover720avif} 720w, ${cover1200avif} 1200w, ${cover1920avif} 1920w`} sizes={SIZES} />
+        <source type="image/webp" srcSet={`${cover720webp} 720w, ${cover1200webp} 1200w, ${cover1920webp} 1920w`} sizes={SIZES} />
         <img
           className={styles.image}
           src={cover1200webp}

@@ -1,6 +1,7 @@
 .page {
   display: grid;
   gap: var(--space-6);
+  margin-top: var(--space-6);
 }
 
 .columns {

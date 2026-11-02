@@ -1,10 +1,12 @@
 /* Text sits on a photo, so it is always light, in both themes. */
 .hero {
+  grid-column: full;
   position: relative;
   display: grid;
-  min-height: 24rem;
+  min-height: 26rem;
+  /* Flush with the header (cancels the top padding of <main>). */
+  margin-top: calc(-1 * var(--space-5));
   overflow: hidden;
-  border-radius: var(--radius-lg);
   background: var(--slate-900);
   color: var(--white);
   isolation: isolate;
@@ -34,7 +36,8 @@
   display: grid;
   gap: var(--space-2);
   align-content: end;
-  padding: var(--space-5) var(--space-4);
+  /* Same left edge as the content column of <main>. */
+  padding: var(--space-6) max(var(--space-4), (100% - var(--content-max)) / 2 + var(--space-4));
 }
 
 .phase {
@@ -91,10 +94,10 @@
 
 @media (min-width: 48rem) {
   .hero {
-    min-height: 28rem;
+    min-height: 32rem;
   }
 
   .content {
-    padding: var(--space-7) var(--space-6);
+    padding-block: var(--space-7);
   }
 }
