@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinking in React · Consulta</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body class="ref">
+<main>
+<div class="kicker">Referência</div>
+<h1>Thinking in React</h1>
+<p class="lede">UI = f(props, state). Guarde o mínimo; derive o resto no render.</p>
+<div class="meta"><a href="../lessons/0001-thinking-in-react.html">Lição 01</a><a href="https://react.dev/learn/thinking-in-react">react.dev/learn/thinking-in-react</a></div>
+
+<h2>Os 5 passos</h2>
+<ol>
+  <li><strong>Hierarquia:</strong> desenhe caixas no mockup; um componente = uma responsabilidade.</li>
+  <li><strong>Versão estática:</strong> só props, zero state. Dados descem (one-way data flow).</li>
+  <li><strong>Estado mínimo e completo:</strong> DRY; compute o resto sob demanda.</li>
+  <li><strong>Onde o estado mora:</strong> ancestral comum mais próximo de quem o renderiza.</li>
+  <li><strong>Inverse data flow:</strong> o dono passa setters como callback props (<code>onXChange</code>).</li>
+</ol>
+
+<div class="grid-2">
+<div>
+<h2>É state?</h2>
+<table>
+<tr><th>Pergunta</th><th>Se sim</th></tr>
+<tr><td>Não muda com o tempo?</td><td>Estático (módulo TS)</td></tr>
+<tr><td>Vem do pai via props?</td><td>Não é state daqui</td></tr>
+<tr><td>Dá para calcular?</td><td>Derivado, calcule no render</td></tr>
+<tr><td>Nenhuma das anteriores</td><td><strong>State</strong></td></tr>
+</table>
+</div>
+<div>
+<h2>Onde mora</h2>
+<ol>
+  <li>Liste <em>todos</em> que renderizam com base nele.</li>
+  <li>Ache o ancestral comum mais próximo.</li>
+  <li>Coloque ali ou acima. Se nenhum fizer sentido, crie um componente dono.</li>
+</ol>
+<p class="muted">Context transporta valor; não decide dono.</p>
+</div>
+</div>
+
+<h2>Anti-padrões → correção</h2>
+<div class="table-wrap"><table>
+<tr><th>Cheiro no PR</th><th>Correção</th><th>Fonte</th></tr>
+<tr><td><code>useState</code> + <code>useEffect</code> para copiar um cálculo</td><td><code>const x = f(a, b)</code> no render</td><td><a href="https://react.dev/learn/you-might-not-need-an-effect#updating-state-based-on-props-or-state">YMNNAE</a></td></tr>
+<tr><td><code>useState(props.x)</code> (espelhar prop)</td><td>Use a prop direto</td><td><a href="https://react.dev/learn/choosing-the-state-structure#don-t-mirror-props-in-state">CtSS</a></td></tr>
+<tr><td><code>selectedItem</code> (objeto) em state</td><td><code>selectedId</code> + <code>items.find</code></td><td><a href="https://react.dev/learn/choosing-the-state-structure#avoid-duplication-in-state">CtSS</a></td></tr>
+<tr><td><code>isSelected</code> em cada item</td><td>Um id no pai</td><td><a href="https://react.dev/learn/choosing-the-state-structure#avoid-contradictions-in-state">CtSS</a></td></tr>
+<tr><td><code>useMemo</code> “por garantia”</td><td>Só para cálculo caro e puro</td><td><a href="https://react.dev/learn/you-might-not-need-an-effect#caching-expensive-calculations">YMNNAE</a></td></tr>
+<tr><td><code>new Date()</code> / <code>localStorage</code> lidos no render</td><td><code>now</code> como input; localStorage: ler no initializer, gravar no handler</td><td><a href="https://react.dev/learn/keeping-components-pure">Pure</a></td></tr>
+<tr><td><code>activeTab</code> em useState</td><td>Derive da URL</td><td>(lição de URL)</td></tr>
+</table></div>
+
+<h2>Angular → React</h2>
+<div class="table-wrap"><table>
+<tr><th>Angular</th><th>React</th></tr>
+<tr><td>Campo da classe + <code>ngOnChanges</code></td><td>Variável local no render</td></tr>
+<tr><td><code>computed()</code> (signals)</td><td>O corpo do componente</td></tr>
+<tr><td>Service <code>providedIn: 'root'</code> com estado</td><td>State no ancestral comum (+ Context para transportar)</td></tr>
+<tr><td><code>[(ngModel)]</code></td><td><code>value</code> + <code>onChange</code> (inverse data flow)</td></tr>
+<tr><td><code>ngOnInit</code> carregando dado estático</td><td><code>import</code> do módulo</td></tr>
+</table></div>
+
+<h2>Home: classificação</h2>
+<div class="table-wrap"><table>
+<tr><th>Dado</th><th>Tipo</th><th>Fonte / dono</th></tr>
+<tr><td>Título, datas, viajantes, código de voo</td><td>Estático</td><td><code>trip.ts</code></td></tr>
+<tr><td>Contagens do resumo, dias</td><td>Derivado</td><td><code>getTripStats(trip)</code></td></tr>
+<tr><td>Próximos passos</td><td>Derivado</td><td><code>getNextSteps(itinerary, now)</code></td></tr>
+<tr><td>Cor do badge, “+1 dia”</td><td>Derivado</td><td>Mapa / comparação de datas</td></tr>
+<tr><td>Nav ativa</td><td>Derivado</td><td>URL (router)</td></tr>
+<tr><td>Tema</td><td>State</td><td>App (lê no initializer, grava no handler)</td></tr>
+<tr><td>Menu mobile aberto</td><td>State</td><td>AppHeader</td></tr>
+</table></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinking in React</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+
+<div class="kicker">Lição 01 · Semana 1 de 4,5 · ~15 min</div>
+<h1>Thinking in React</h1>
+<p class="lede">Decompor a Home em componentes e classificar cada dado como estático, estado ou derivado. O objetivo é ter o mínimo possível de estado.</p>
+<div class="meta"><span>Pré-requisito: nenhum</span><span>Aplica em: <code>../src</code> (Home)</span><span>Referência: <a href="../reference/thinking-in-react.html">folha de consulta</a></span></div>
+
+<h2>1. A diferença que muda tudo</h2>
+<p>Um componente Angular é uma <em>instância de classe</em> que vive enquanto está na tela. Os campos dela são memória, e você é responsável por mantê-los atualizados (<code>ngOnChanges</code>, <code>subscribe</code>, setters).</p>
+<p>Um componente React é uma <em>função que roda de novo a cada render</em>. Não existe <code>this</code>. As variáveis locais nascem e morrem em cada execução. O que precisa durar entre renders tem que ser declarado explicitamente como state (<code>useState</code>); todo o resto é recalculado.<a class="cite" href="https://react.dev/learn/keeping-components-pure">[pure]</a></p>
+<p>Consequência: <strong>derivar um valor no render é de graça e nunca fica dessincronizado.</strong> Guardar em state um valor que dá para calcular cria uma segunda fonte de verdade, e aí você precisa sincronizar as duas.</p>
+
+<h2>2. As três perguntas</h2>
+<p>O react.dev manda encontrar a representação <em>mínima, mas completa</em> do estado, seguindo DRY: “compute everything else on-demand”.<a class="cite" href="https://react.dev/learn/thinking-in-react#step-3-find-the-minimal-but-complete-representation-of-ui-state">[TiR §3]</a> Para cada dado:</p>
+<ol>
+  <li><strong>Não muda com o tempo?</strong> Então é <strong>estático</strong>. Na viagem: módulo TS importado (<code>trip.ts</code>), não state.</li>
+  <li><strong>Vem do pai via props?</strong> Então não é state <em>deste</em> componente.</li>
+  <li><strong>Dá para calcular a partir de props/state existentes?</strong> Então é <strong>derivado</strong>, e “definitely isn't state”.</li>
+</ol>
+<p>Sobrou? É <strong>estado</strong>. Na prática a Home inteira tem pouquíssimo estado.</p>
+
+<div class="callout angular">
+<p>Você vai querer escrever isto (é o <code>ngOnChanges</code> com outra roupa):</p>
+<pre class="bad-code"><code>const [totalDias, setTotalDias] = useState(0);
+useEffect(() =&gt; {
+  setTotalDias(diffInDays(trip.start, trip.end));
+}, [trip]);</code></pre>
+<p>O primeiro render mostra <code>0</code>, depois vem um segundo render, e você tem duas fontes de verdade. O react.dev chama isso de “redundant state and unnecessary Effect”.<a class="cite" href="https://react.dev/learn/you-might-not-need-an-effect#updating-state-based-on-props-or-state">[YMNNAE]</a></p>
+<pre class="good-code"><code>const totalDias = diffInDays(trip.start, trip.end);</code></pre>
+<p>Se você já usou signals: o corpo inteiro do componente funciona como um grande <code>computed()</code>. <code>useMemo</code> só entra quando o cálculo é caro de verdade, não “por garantia”.<a class="cite" href="https://react.dev/learn/you-might-not-need-an-effect#caching-expensive-calculations">[useMemo]</a></p>
+</div>
+
+<h2>3. Onde o estado mora</h2>
+<p>Para cada estado:<a class="cite" href="https://react.dev/learn/thinking-in-react#step-4-identify-where-your-state-should-live">[TiR §4]</a> (1) liste <em>todos</em> os componentes que renderizam algo com base nele; (2) ache o ancestral comum mais próximo; (3) coloque o estado ali ou acima. Se nenhum fizer sentido, crie um componente só para guardá-lo.</p>
+<p>Para mudar o estado lá de baixo, o dono passa o <em>setter</em> como callback prop: é o <strong>inverse data flow</strong>.<a class="cite" href="https://react.dev/learn/thinking-in-react#step-5-add-inverse-data-flow">[TiR §5]</a> Não existe <code>[(ngModel)]</code>. O equivalente explícito é <code>value</code> + <code>onChange</code>.</p>
+
+<div class="callout angular">
+<p>O reflexo é criar um <code>TripStateService</code> <code>providedIn: 'root'</code> e jogar tudo lá. Em React, o default é deixar o estado no ancestral comum mais próximo. Context é um mecanismo de <em>transporte</em> para evitar prop drilling; ele não substitui “decidir quem é o dono”. Isso fica para uma lição futura.</p>
+</div>
+
+<h2>4. Pratique na Home</h2>
+<figure>
+  <img src="../../docs/layout.png" alt="Layout de referência da Home: header com navegação, hero, resumo com 5 cards, mapa do roteiro, próximos passos e quatro prévias de páginas.">
+  <figcaption>Layout de referência (<code>docs/layout.png</code>). Deixe aberto ao lado.</figcaption>
+</figure>
+
+<div class="exercise reveal">
+  <h3>Exercício A · Árvore de componentes (retrieval)</h3>
+  <p>Sem olhar a resposta: escreva a hierarquia da Home, com indentação. Nomeie os componentes pelo <em>papel</em> que cumprem, não pela aparência. Desça até as folhas e marque repetições com <code>×N</code>. Isto é a árvore de <em>render</em> (quem renderiza quem), não a estrutura de pastas. Dica de sênior: procure as partes que se repetem com a mesma estrutura.</p>
+  <textarea aria-label="Sua árvore de componentes" placeholder="App&#10;  AppHeader&#10;    ..."></textarea>
+  <div class="reveal-answer" hidden>
+<div class="tree">App                      ← layout + estado do tema
+├─ AppHeader
+│  ├─ Brand
+│  ├─ MainNav → NavItem ×6  ← item ativo vem da URL
+│  └─ ThemeToggle
+└─ HomePage
+   ├─ TripHero
+   │  └─ TravelerAvatars
+   ├─ TripSummary → StatCard ×5
+   ├─ RouteMap → RouteStop ×n
+   ├─ NextSteps → DayGroup → StepItem
+   └─ MainPages
+      └─ PreviewCard ×4  (title, icon, href, children)
+         ├─ FlightRow ×n
+         ├─ ItineraryRow ×n
+         ├─ StayRow ×n
+         └─ ActivityRow ×n → DifficultyBadge</div>
+<p><strong>Confira:</strong></p>
+<ul>
+  <li>Você viu que os 4 cards de “Páginas principais” têm a <em>mesma moldura</em> (ícone, título, lista, “Ver todos →”)? Uma única <code>PreviewCard</code> que recebe <code>children</code> é composição. Quatro componentes copiados, ou um único com <code>type="voos" | ...</code> e um switch dentro, é o cheiro a evitar.</li>
+  <li><code>NextSteps</code> e a prévia do Roteiro leem o <em>mesmo itinerário</em> (20–23 e 20–24 nov). A fonte é uma só; cada componente exibe uma fatia diferente.</li>
+  <li>Se a sua árvore tem um <code>HomeComponent</code> gigante ou um componente por “seção visual” sem reuso, ela está granular demais ou de menos. O critério do react.dev é o mesmo do SRP: um componente faz uma coisa.<a class="cite" href="https://react.dev/learn/thinking-in-react#step-1-break-the-ui-into-a-component-hierarchy">[TiR §1]</a></li>
+</ul>
+  </div>
+</div>
+
+<div class="exercise classify" data-options="Estático|Estado|Derivado">
+  <h3>Exercício B · Classifique cada dado da Home</h3>
+  <p class="muted">Pense na fonte da verdade, não na aparência.</p>
+  <div class="c-item" data-answer="Estático" data-why="Vem de <code>trip.ts</code> e não muda durante o uso. Basta importar o módulo: não precisa de state nem de <code>ngOnInit</code> para “carregar”.">O título “PATAGONIA 2026” e as datas 20/11 → 30/11</div>
+  <div class="c-item" data-answer="Derivado" data-why="É <code>flights.length</code>. Repare: o layout mostra 4 voos na prévia e “5 Voos” no resumo. Pode ser só truncamento, mas é exatamente o tipo de divergência que surge quando alguém digita o número à mão.">“5 Voos” no resumo</div>
+  <div class="c-item" data-answer="Derivado" data-why="Vem de <code>start</code> e <code>end</code>. Atenção: de 20 a 30 são 11 dias contando os dois extremos, ou 10 noites. Uma função <code>tripLengthInDays()</code> pura, com teste, deixa essa regra explícita. Número digitado à mão esconde a decisão.">“10 Dias”</div>
+  <div class="c-item" data-answer="Estado" data-why="Muda por interação do usuário e não dá para calcular a partir de nada. O localStorage só persiste o valor: lê-se uma vez no initializer do <code>useState</code> e grava-se no handler do clique. Durante o render, a fonte de verdade é o state.">Tema claro/escuro (botão da lua)</div>
+  <div class="c-item" data-answer="Derivado" data-why="Deriva da URL atual. O dono desse estado é o router, não você. Guardar <code>activeTab</code> num useState duplica a URL e quebra o botão voltar e o deep link. (A lição de URL como estado aprofunda isso.)">O link “Início” sublinhado como ativo</div>
+  <div class="c-item" data-answer="Derivado" data-why="É <code>itinerary.filter(e =&gt; e.date &gt;= today).slice(0, n)</code>. Note que depende de <em>hoje</em>, uma entrada que vem de fora. Veja a pergunta 4 abaixo.">A lista “Próximos passos”</div>
+  <div class="c-item" data-answer="Estático" data-why="É um campo do dado (<code>flight.code</code>). Ele só chega ao <code>FlightRow</code> por props, o que, pela pergunta 2, também não o torna state.">O código do voo “LA8140”</div>
+  <div class="c-item" data-answer="Derivado" data-why="A dificuldade (<code>'facil' | 'moderado' | 'dificil'</code>) é dado estático; a cor é um mapa a partir dela. Um <code>Record&lt;Difficulty, Tone&gt;</code> com TS strict garante que nenhum nível fique sem cor.">A cor vermelha do badge “Difícil”</div>
+  <div class="c-item" data-answer="Derivado" data-why="Sai da comparação entre a data/hora de partida e a de chegada do AR1881. Se for guardado como campo à mão, fica errado no dia em que o horário do voo mudar.">“(+1 dia)” na chegada do AR1881</div>
+  <div class="c-item" data-answer="Estado" data-why="Muda por interação e ninguém consegue calcular. Mora no <code>AppHeader</code> (ou no componente de navegação mobile), não no App: só ele renderiza algo com base nisso.">Menu mobile aberto/fechado (no celular)</div>
+  <div class="c-item" data-answer="Estático" data-why="Lista fixa de viajantes em <code>trip.ts</code>. A legenda “Mariana, esposa e amigas” pode ser estática ou derivada da lista, mas nunca é state.">Avatares das viajantes</div>
+</div>
+
+<div class="exercise mcq">
+  <h3>Exercício C · Code review</h3>
+  <p class="q"><strong>1.</strong> O tema afeta o ícone do <code>ThemeToggle</code> e o estilo da página inteira. Onde o state do tema mora?</p>
+  <ol>
+    <li data-why="O toggle renderiza com base no tema, mas a página inteira também. O dono precisa estar acima de todos os que leem o valor.">No ThemeToggle, que é dono do botão</li>
+    <li data-correct data-why="O ancestral comum de todos que dependem do tema é o App/layout. Se o prop drilling incomodar, o Context <em>transporta</em> o valor, mas o dono continua sendo o App.">No App, o ancestral comum mais próximo</li>
+    <li data-why="Isso é o reflexo do service singleton. Uma variável de módulo muda sem o React saber, e por isso não dispara re-render.">Num módulo singleton, no estilo de service</li>
+    <li data-why="Gravar no localStorage não dispara re-render, e lê-lo a cada render é ler estado mutável de fora do React. Ele serve só para persistir: lê-se uma vez no initializer do <code>useState</code> e grava-se no handler. Quem manda é o state.">No localStorage, lido diretamente em cada render</li>
+  </ol>
+</div>
+
+<div class="exercise mcq">
+  <p class="q"><strong>2.</strong> Num PR aparece: <code>const [dias, setDias] = useState(0); useEffect(() =&gt; setDias(diff(trip.start, trip.end)), [trip]);</code>. Qual é o comentário certo?</p>
+  <ol>
+    <li data-why="As dependências estão “corretas” o bastante: <code>trip</code> cobre os campos. O problema não é o array, é a existência do effect.">Faltam trip.start e trip.end no array deps</li>
+    <li data-why="useMemo só melhora performance. Aqui o cálculo é barato, e trocar o effect por useMemo seria otimizar algo que nem deveria existir.">Trocar o useEffect por useMemo resolve tudo</li>
+    <li data-correct data-why="É estado redundante sincronizado por effect: um render extra com valor errado e duas fontes de verdade. A correção é <code>const dias = diff(trip.start, trip.end)</code>.">Estado redundante: calcule direto durante o render</li>
+    <li data-why="Falso: effects rodam <em>depois</em> do commit. É justamente por isso que o primeiro frame mostra 0.">O useEffect roda antes do primeiro render</li>
+  </ol>
+</div>
+
+<div class="exercise mcq">
+  <p class="q"><strong>3.</strong> Na página de Hospedagens, clicar num pin do mapa destaca a hospedagem na lista. O que entra no state?</p>
+  <ol>
+    <li data-why="Duplica um objeto que já está em <code>stays</code>. Se o dado mudar, a seleção fica com a cópia antiga.">O objeto inteiro da hospedagem que foi selecionada</li>
+    <li data-why="Espalha uma única informação (“qual está selecionada”) por N lugares, que podem se contradizer, por exemplo com duas marcadas.">Um campo booleano isSelected dentro de cada hospedagem</li>
+    <li data-why="Duplica a lista inteira só para guardar um bit de informação.">Uma cópia da lista marcando qual está selecionada</li>
+    <li data-correct data-why="O mínimo que basta. <code>const selected = stays.find(s =&gt; s.id === selectedId)</code> é derivado no render. É a recomendação literal do react.dev para seleção.">Somente o id da hospedagem que foi selecionada</li>
+  </ol>
+</div>
+
+<div class="exercise mcq">
+  <p class="q"><strong>4.</strong> “Próximos passos” depende da data de hoje. Qual é o melhor desenho?</p>
+  <ol>
+    <li data-correct data-why="O componente fica puro (mesmas entradas, mesma saída) e testável: no Vitest você passa <code>now = 2026-11-21</code> e verifica que “Perito Moreno” aparece primeiro. Se precisar virar à meia-noite, um hook sincroniza com o relógio (sistema externo, lição de effects) e entrega <code>now</code>.">Receber now como parâmetro e filtrar no render</li>
+    <li data-why="O valor inicial do useState só é lido no primeiro render. A lista nunca se atualizaria, e você ainda teria estado redundante.">Guardar a lista filtrada dentro de um useState</li>
+    <li data-why="É o padrão do ngOnInit: render vazio, depois um segundo render. E ainda é estado redundante.">Recalcular a lista num useEffect de dependências vazias</li>
+    <li data-why="Espalha a impureza por N componentes e cria vários “agoras” diferentes no mesmo render. Também é intestável.">Chamar new Date() dentro de cada item renderizado</li>
+  </ol>
+</div>
+
+<h2>5. Sua tarefa no dashboard</h2>
+<p class="muted">Entrega: até 25/10 (fim da semana 1 do <a href="../MISSION.md">plano</a>).</p>
+<ol>
+  <li>Crie <code>src/data/trip.ts</code> com os tipos (<code>Flight</code>, <code>Stay</code>, <code>Activity</code>, <code>ItineraryDay</code>) e os dados do layout.</li>
+  <li>Crie funções puras de derivação em <code>src/domain/</code>: <code>getTripStats(trip)</code>, <code>getNextSteps(itinerary, now)</code>, <code>tripLengthInDays(start, end)</code>. Cubra cada uma com testes no Vitest (instale e configure nesta semana). Decida e documente num teste: são 10 ou 11 dias?</li>
+  <li>Monte a <strong>versão estática</strong> da Home (passo 2 do react.dev): só props, <strong>zero useState</strong>.<a class="cite" href="https://react.dev/learn/thinking-in-react#step-2-build-a-static-version-in-react">[TiR §2]</a> O tema fica para depois.</li>
+  <li>Me mande a árvore e o diff. Vou revisar como um PR.</li>
+</ol>
+
+<div class="callout source">
+<p><a href="https://react.dev/learn/thinking-in-react"><strong>react.dev, Thinking in React</strong></a>: leia tudo, ~20 min. Depois, <a href="https://react.dev/learn/choosing-the-state-structure">Choosing the State Structure</a> (os 5 princípios, principalmente “avoid redundant” e “avoid duplication”).</p>
+</div>
+
+<div class="callout ask">
+<p><strong>Ficou alguma dúvida?</strong> Pergunte para mim no terminal. Por exemplo: “onde mora o estado do checklist?” ou “isso aqui é derivado ou estado?”. Discordar da resposta de um quiz também vale.</p>
+</div>
+
+<nav class="lesson-nav">
+  <span>Início do curso</span>
+  <a href="../reference/thinking-in-react.html">Folha de consulta →</a>
+</nav>
+</main>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
