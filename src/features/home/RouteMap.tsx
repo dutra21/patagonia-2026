@@ -1,4 +1,4 @@
-import type { RouteLeg, RouteStop } from '../../domain/trip'
+import type { RouteStop } from '../../domain/trip'
 import type { PlaceId, Trip } from '../../domain/types'
 import { pluralize } from '../../shared/lib/format'
 import { Card } from '../../shared/ui/Card'
@@ -21,7 +21,7 @@ function stopNote(stop: RouteStop): string | undefined {
   return undefined
 }
 
-/** Quadratic curve bent to the left of the direction of travel, so out and back legs don't overlap. */
+/** Quadratic curve bent to the left of the direction of travel, so legs between the same cities don't overlap. */
 function curve([x1, y1]: [number, number], [x2, y2]: [number, number]): string {
   const dx = x2 - x1
   const dy = y2 - y1
@@ -32,15 +32,17 @@ function curve([x1, y1]: [number, number], [x2, y2]: [number, number]): string {
   return `M${x1.toFixed(1)},${y1.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`
 }
 
-interface Props {
-  trip: Trip
-  stops: RouteStop[]
-  legs: RouteLeg[]
-}
-
-/** Static route map: local outline (Natural Earth) + projected cities. No map library, no tiles. */
-export function RouteMap({ trip, stops, legs }: Props) {
+/**
+ * Static route map: local outline (Natural Earth) + projected cities. No map library, no tiles.
+ * Like the layout, it draws the route one way only: the flight home is left out.
+ */
+export function RouteMap({ trip, stops }: { trip: Trip; stops: RouteStop[] }) {
   const point = (id: PlaceId) => projectMercator(trip.places[id].coords)
+  const drawn = stops.filter((stop) => stop.role !== 'return')
+  const segments = drawn.slice(1).flatMap((stop, index) => {
+    const previous = drawn[index]
+    return previous ? [{ id: `${previous.placeId}-${stop.placeId}-${index}`, from: previous.placeId, to: stop.placeId }] : []
+  })
 
   // One label per city; a city visited twice shows its overnight stop if any.
   const labels = new Map<PlaceId, RouteStop>()
@@ -69,12 +71,8 @@ export function RouteMap({ trip, stops, legs }: Props) {
           <path d={landPath} className={styles.land} />
           <path d={argentinaPath} className={styles.argentina} />
 
-          {legs.map((leg) => (
-            <path
-              key={leg.id}
-              d={curve(point(leg.from), point(leg.to))}
-              className={leg.mode === 'flight' ? styles.flight : styles.ground}
-            />
+          {segments.map((segment) => (
+            <path key={segment.id} d={curve(point(segment.from), point(segment.to))} className={styles.route} />
           ))}
 
           {[...labels.values()].map((stop) => {
@@ -101,14 +99,8 @@ export function RouteMap({ trip, stops, legs }: Props) {
             )
           })}
         </svg>
-        <figcaption className={styles.caption}>
-          <span id="mapa-rota-legenda" className="visually-hidden">
-            Mapa da rota: {summary}.
-          </span>
-          <span aria-hidden="true" className={styles.legend}>
-            <span className={styles.legendFlight}>Voo</span>
-            <span className={styles.legendGround}>Carro</span>
-          </span>
+        <figcaption id="mapa-rota-legenda" className="visually-hidden">
+          Mapa da rota: {summary}.
         </figcaption>
       </figure>
     </Card>
