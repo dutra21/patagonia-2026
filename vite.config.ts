@@ -1,9 +1,26 @@
 /// <reference types="vitest/config" />
+import { readFileSync } from 'node:fs'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 const BACKGROUND = '#020617'
+
+/** Headers of the "/*" rule in public/_headers, so `vite preview` (and the e2e tests) run under the production CSP. */
+function productionSecurityHeaders(): Record<string, string> {
+  const lines = readFileSync('public/_headers', 'utf8').split('\n')
+  const headers: Record<string, string> = {}
+  let inBlock = false
+  for (const line of lines) {
+    if (line.trim() === '' || line.trim().startsWith('#')) continue
+    if (!line.startsWith(' ')) inBlock = line.trim() === '/*'
+    else if (inBlock && line.includes(':')) {
+      const [name = '', ...value] = line.trim().split(':')
+      headers[name] = value.join(':').trim()
+    }
+  }
+  return headers
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -48,6 +65,9 @@ export default defineConfig({
       },
     }),
   ],
+  preview: {
+    headers: productionSecurityHeaders(),
+  },
   test: {
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],

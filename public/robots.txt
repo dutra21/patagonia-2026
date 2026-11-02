@@ -1,0 +1,4 @@
+# Personal trip site: reachable by link, but kept out of search engines on purpose
+# (it has names, photos and addresses). To allow indexing, change "Disallow: /" to "Allow: /".
+User-agent: *
+Disallow: /

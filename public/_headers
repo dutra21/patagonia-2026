@@ -1,0 +1,38 @@
+# Cloudflare Pages headers (also valid on Netlify).
+# Rules never set the same header twice for one path: Pages joins repeated values with commas.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-6eScnmCDYLSasFFOO8VKGxWY1/TBWykaGi+Cl0wM6bw='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+# The script hash above is the inline theme script in index.html.
+# If that script changes, update the hash (the e2e test "CSP allows the inline theme script" fails otherwise).
+
+# Always revalidate: app shell, service worker and manifest (the SW detects new versions through these).
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/sw.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache
+/roteiro
+  Cache-Control: no-cache
+/voos
+  Cache-Control: no-cache
+/hospedagens
+  Cache-Control: no-cache
+/passeios
+  Cache-Control: no-cache
+/checklist
+  Cache-Control: no-cache
+
+# Content-hashed files never change.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/workbox-*
+  Cache-Control: public, max-age=31536000, immutable
