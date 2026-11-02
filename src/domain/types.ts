@@ -13,6 +13,8 @@ export interface Airport {
 export interface Place {
   id: PlaceId
   name: string
+  /** WGS84 coordinates, used to draw the route map. */
+  coords: { lat: number; lon: number }
   /** IANA time zone used to display local times. */
   timeZone: string
   airport?: Airport

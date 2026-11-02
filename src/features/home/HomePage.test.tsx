@@ -31,7 +31,10 @@ describe('HomePage', () => {
     const stats = within(section('Resumo da viagem')).getAllByRole('listitem').map((item) => item.textContent)
     expect(stats).toEqual(['5Voos', '4Hospedagens', '4Cidades', '7Passeios', '11Dias'])
 
-    expect(within(section('Rota')).getAllByRole('listitem')).toHaveLength(7)
+    const map = within(section('Mapa do roteiro')).getByRole('img')
+    expect(map).toHaveAccessibleName(
+      'Mapa da rota: São Paulo, depois Buenos Aires, depois El Calafate (2 noites), depois El Chaltén (4 noites), depois Ushuaia (3 noites), depois Buenos Aires (1 noite), depois São Paulo.',
+    )
   })
 
   it('lists the next steps starting with the first flight', () => {

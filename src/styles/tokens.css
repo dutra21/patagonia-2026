@@ -60,6 +60,11 @@
   --color-hard-text: #fca5a5;
   --color-neutral-bg: var(--slate-800);
   --color-neutral-text: var(--slate-200);
+
+  --map-water: var(--slate-950);
+  --map-land: #16213a;
+  --map-highlight: #1e2a44;
+  --map-border: var(--slate-700);
 }
 
 :root[data-theme='light'] {
@@ -86,4 +91,9 @@
   --color-hard-text: #7f1d1d;
   --color-neutral-bg: var(--slate-100);
   --color-neutral-text: var(--slate-700);
+
+  --map-water: #e0f2fe;
+  --map-land: var(--white);
+  --map-highlight: var(--slate-100);
+  --map-border: var(--slate-300);
 }

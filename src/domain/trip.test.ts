@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { trip } from '../data/trip'
-import { eventEndsAt, getItinerary, getNextSteps, getRouteStops, getTripPhase, getTripStats } from './trip'
+import { eventEndsAt, getItinerary, getNextSteps, getRouteLegs, getRouteStops, getTripPhase, getTripStats } from './trip'
 
 const at = (iso: string) => new Date(iso)
 
@@ -104,6 +104,20 @@ describe('getRouteStops', () => {
       { name: 'Ushuaia', role: 'stay', nights: 3 },
       { name: 'Buenos Aires', role: 'stay', nights: 1 },
       { name: 'São Paulo', role: 'return', nights: undefined },
+    ])
+  })
+})
+
+describe('getRouteLegs', () => {
+  it('follows flights and drives in itinerary order', () => {
+    expect(getRouteLegs(trip).map(({ from, to, mode }) => `${from}>${to}:${mode}`)).toEqual([
+      'sao-paulo>buenos-aires:flight',
+      'buenos-aires>el-calafate:flight',
+      'el-calafate>el-chalten:car',
+      'el-chalten>el-calafate:car',
+      'el-calafate>ushuaia:flight',
+      'ushuaia>buenos-aires:flight',
+      'buenos-aires>sao-paulo:flight',
     ])
   })
 })

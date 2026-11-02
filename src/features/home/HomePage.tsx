@@ -1,5 +1,5 @@
 import { trip } from '../../data/trip'
-import { getItinerary, getNextSteps, getRouteStops, getTripPhase, getTripStats } from '../../domain/trip'
+import { getItinerary, getNextSteps, getRouteLegs, getRouteStops, getTripPhase, getTripStats } from '../../domain/trip'
 import { useNow } from '../../shared/lib/useNow'
 import { Hero } from './Hero'
 import { HomeSection } from './HomeSection'
@@ -12,6 +12,7 @@ import styles from './HomePage.module.css'
 // Static data: computed once.
 const stats = getTripStats(trip)
 const stops = getRouteStops(trip)
+const legs = getRouteLegs(trip)
 const itinerary = getItinerary(trip)
 
 export function HomePage() {
@@ -27,8 +28,8 @@ export function HomePage() {
       </HomeSection>
 
       <div className={styles.columns}>
-        <HomeSection id="rota" title="Rota">
-          <RouteMap stops={stops} />
+        <HomeSection id="mapa" title="Mapa do roteiro">
+          <RouteMap trip={trip} stops={stops} legs={legs} />
         </HomeSection>
         <HomeSection id="proximos-passos" title="Próximos passos">
           <NextSteps events={getNextSteps(trip, now, 5)} />

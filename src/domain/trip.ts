@@ -1,5 +1,5 @@
 import { daysBetween, endOfDay, localDate, startOfDay, tripLengthInDays } from './dates'
-import type { ItineraryDay, ItineraryRef, Place, PlaceId, Stay, Trip, TripEvent } from './types'
+import type { ItineraryDay, ItineraryRef, Place, PlaceId, Stay, TransferMode, Trip, TripEvent } from './types'
 
 function findById<T extends { id: string }>(items: readonly T[], id: string, label: string): T {
   const item = items.find((candidate) => candidate.id === id)
@@ -198,4 +198,28 @@ export function getRouteStops(trip: Trip): RouteStop[] {
     }
     return { ...base, role: 'connection' }
   })
+}
+
+export interface RouteLeg {
+  id: string
+  from: PlaceId
+  to: PlaceId
+  mode: 'flight' | TransferMode
+}
+
+/** Every flight and ground transfer, in itinerary order. */
+export function getRouteLegs(trip: Trip): RouteLeg[] {
+  return trip.days.flatMap((day) =>
+    day.items.flatMap((ref): RouteLeg[] => {
+      if (ref.kind === 'flight') {
+        const flight = findById(trip.flights, ref.id, 'Flight')
+        return [{ id: ref.id, from: flight.from, to: flight.to, mode: 'flight' }]
+      }
+      if (ref.kind === 'transfer') {
+        const transfer = findById(trip.transfers, ref.id, 'Transfer')
+        return [{ id: ref.id, from: transfer.from, to: transfer.to, mode: transfer.mode }]
+      }
+      return []
+    }),
+  )
 }
