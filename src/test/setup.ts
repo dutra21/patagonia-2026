@@ -1,7 +1,16 @@
 import '@testing-library/jest-dom/vitest'
 import { act, cleanup } from '@testing-library/react'
-import { afterEach } from 'vitest'
+import { afterEach, vi } from 'vitest'
 import { resetPersistentStorageRequest } from '../shared/lib/persistentStorage'
+
+// No service worker in jsdom: the registration hook is replaced by an idle one.
+vi.mock('virtual:pwa-register/react', () => ({
+  useRegisterSW: () => ({
+    needRefresh: [false, () => {}],
+    offlineReady: [false, () => {}],
+    updateServiceWorker: () => Promise.resolve(),
+  }),
+}))
 
 afterEach(() => {
   // Clear storage and send the same signal another tab sends after clearing it, while

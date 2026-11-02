@@ -1,6 +1,7 @@
 import { MountainSnow } from 'lucide-react'
 import { Link, NavLink } from 'react-router'
 import { navItems } from './navigation'
+import { OfflineIndicator } from './pwa/OfflineIndicator'
 import { ThemeToggle } from './theme/ThemeToggle'
 import styles from './AppHeader.module.css'
 
@@ -26,7 +27,10 @@ export function AppHeader() {
           </ul>
         </nav>
 
-        <ThemeToggle />
+        <div className={styles.tools}>
+          <OfflineIndicator />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   )

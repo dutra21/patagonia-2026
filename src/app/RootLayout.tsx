@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { AppHeader } from './AppHeader'
+import { UpdatePrompt } from './pwa/UpdatePrompt'
 import styles from './RootLayout.module.css'
 
 export function RootLayout() {
@@ -24,6 +25,7 @@ export function RootLayout() {
       <main id="conteudo" ref={mainRef} tabIndex={-1} className={styles.main}>
         <Outlet />
       </main>
+      <UpdatePrompt />
       <ScrollRestoration />
     </>
   )
