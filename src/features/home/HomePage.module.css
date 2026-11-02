@@ -1,0 +1,16 @@
+.page {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.columns {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 56rem) {
+  .columns {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--space-5);
+  }
+}

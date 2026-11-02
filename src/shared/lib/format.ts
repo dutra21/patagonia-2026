@@ -48,3 +48,16 @@ export function dateBadge(date: IsoDate): { day: string; month: string; weekday:
     weekday: clean(formatter({ timeZone: 'UTC', weekday: 'short' }).format(d)),
   }
 }
+
+/** "3h", "1h 20min", "45min" */
+export function formatDuration(minutes: number): string {
+  const hours = Math.floor(minutes / 60)
+  const rest = minutes % 60
+  if (hours === 0) return `${rest}min`
+  return rest === 0 ? `${hours}h` : `${hours}h ${rest}min`
+}
+
+/** "1 noite", "4 noites" */
+export function pluralize(count: number, singular: string, plural: string): string {
+  return `${count} ${count === 1 ? singular : plural}`
+}

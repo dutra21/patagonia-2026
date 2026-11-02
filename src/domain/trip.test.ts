@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { trip } from '../data/trip'
-import { eventEndsAt, getItinerary, getNextSteps, getTripPhase, getTripStats } from './trip'
+import { eventEndsAt, getItinerary, getNextSteps, getRouteStops, getTripPhase, getTripStats } from './trip'
 
 const at = (iso: string) => new Date(iso)
 
@@ -61,6 +61,12 @@ describe('getNextSteps', () => {
     expect(steps[0]?.id).toBe('activity:perito-moreno')
   })
 
+  it('drops untimed events once the next timed event of the day has started', () => {
+    // 26/11: check-out and drive have no time; the car drop-off is at 12:00.
+    expect(getNextSteps(trip, at('2026-11-26T09:00-03:00'), 1)[0]?.id).toBe('check-out:chalten-ruta-40')
+    expect(getNextSteps(trip, at('2026-11-26T12:30-03:00'), 1)[0]?.id).toBe('flight:fte-ush')
+  })
+
   it('returns nothing after the trip', () => {
     expect(getNextSteps(trip, at('2026-12-01T10:00-03:00'))).toEqual([])
   })
@@ -85,5 +91,19 @@ describe('getTripPhase', () => {
 
   it('reports when the trip is over', () => {
     expect(getTripPhase(trip, at('2026-12-01T00:00-03:00'))).toEqual({ phase: 'after' })
+  })
+})
+
+describe('getRouteStops', () => {
+  it('lists the route with nights per stay and the first Buenos Aires as a connection', () => {
+    expect(getRouteStops(trip).map(({ name, role, nights }) => ({ name, role, nights }))).toEqual([
+      { name: 'São Paulo', role: 'origin', nights: undefined },
+      { name: 'Buenos Aires', role: 'connection', nights: undefined },
+      { name: 'El Calafate', role: 'stay', nights: 2 },
+      { name: 'El Chaltén', role: 'stay', nights: 4 },
+      { name: 'Ushuaia', role: 'stay', nights: 3 },
+      { name: 'Buenos Aires', role: 'stay', nights: 1 },
+      { name: 'São Paulo', role: 'return', nights: undefined },
+    ])
   })
 })

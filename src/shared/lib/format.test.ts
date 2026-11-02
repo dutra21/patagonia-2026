@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dateBadge, formatDate, formatDayMonth, formatLongDate, formatTime } from './format'
+import { dateBadge, formatDate, formatDayMonth, formatDuration, formatLongDate, formatTime, pluralize } from './format'
 
 describe('formatTime', () => {
   it('shows the local time of the event, not the runtime time zone', () => {
@@ -24,5 +24,20 @@ describe('calendar dates', () => {
 
   it('builds a compact badge', () => {
     expect(dateBadge('2026-11-22')).toEqual({ day: '22', month: 'nov', weekday: 'dom' })
+  })
+})
+
+describe('formatDuration', () => {
+  it('formats hours and minutes', () => {
+    expect(formatDuration(180)).toBe('3h')
+    expect(formatDuration(80)).toBe('1h 20min')
+    expect(formatDuration(45)).toBe('45min')
+  })
+})
+
+describe('pluralize', () => {
+  it('picks singular or plural', () => {
+    expect(pluralize(1, 'noite', 'noites')).toBe('1 noite')
+    expect(pluralize(4, 'noite', 'noites')).toBe('4 noites')
   })
 })

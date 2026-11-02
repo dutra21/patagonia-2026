@@ -1,0 +1,42 @@
+.card {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.today {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.heading {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-link);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 1.25rem;
+}
+
+.overnight,
+.description {
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+}

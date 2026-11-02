@@ -1,5 +1,5 @@
 import { daysBetween, endOfDay, localDate, startOfDay, tripLengthInDays } from './dates'
-import type { ItineraryDay, ItineraryRef, Place, PlaceId, Trip, TripEvent } from './types'
+import type { ItineraryDay, ItineraryRef, Place, PlaceId, Stay, Trip, TripEvent } from './types'
 
 function findById<T extends { id: string }>(items: readonly T[], id: string, label: string): T {
   const item = items.find((candidate) => candidate.id === id)
@@ -110,20 +110,27 @@ export function getItinerary(trip: Trip): ResolvedDay[] {
 }
 
 /**
- * When the event stops being relevant. Untimed events, and check-ins without a
- * closing time, last until the end of their day.
+ * When the event stops being relevant.
+ * - Timed events: their end, or their start.
+ * - Check-ins without a closing time: the end of the day.
+ * - Untimed events: when the next timed event of the same day starts
+ *   (`nextTimedStart`), otherwise the end of the day.
  */
-export function eventEndsAt(event: TripEvent): Date {
+export function eventEndsAt(event: TripEvent, nextTimedStart?: Date): Date {
   if (event.end) return new Date(event.end)
-  if (event.start && event.kind !== 'check-in') return new Date(event.start)
-  return endOfDay(event.date, event.timeZone)
+  if (event.start) return event.kind === 'check-in' ? endOfDay(event.date, event.timeZone) : new Date(event.start)
+  return nextTimedStart ?? endOfDay(event.date, event.timeZone)
 }
 
 /** Upcoming or in-progress events after `now`, in itinerary order. */
 export function getNextSteps(trip: Trip, now: Date, limit = 5): TripEvent[] {
   return getItinerary(trip)
-    .flatMap((resolved) => resolved.events)
-    .filter((event) => eventEndsAt(event).getTime() > now.getTime())
+    .flatMap(({ events }) =>
+      events.filter((event, index) => {
+        const nextTimed = events.slice(index + 1).find((later) => later.start)?.start
+        return eventEndsAt(event, nextTimed ? new Date(nextTimed) : undefined).getTime() > now.getTime()
+      }),
+    )
     .slice(0, limit)
 }
 
@@ -158,4 +165,37 @@ export function getTripPhase(trip: Trip, now: Date): TripPhase {
   }
   if (now >= endOfDay(trip.end, timeZone)) return { phase: 'after' }
   return { phase: 'during', dayNumber: daysBetween(trip.start, localDate(now, timeZone)) + 1 }
+}
+
+export function nightsOf(stay: Stay): number {
+  return daysBetween(stay.checkIn.date, stay.checkOut.date)
+}
+
+export interface RouteStop {
+  placeId: PlaceId
+  name: string
+  airportCode?: string
+  role: 'origin' | 'stay' | 'connection' | 'return'
+  /** Nights spent here, for `stay` stops. */
+  nights?: number
+}
+
+/** The route as a list of stops, matching stays in order (a city visited twice can be a connection once). */
+export function getRouteStops(trip: Trip): RouteStop[] {
+  const pendingStays = [...trip.stays]
+  const lastIndex = trip.route.length - 1
+
+  return trip.route.map((placeId, index) => {
+    const { name, airport } = trip.places[placeId]
+    const base = { placeId, name, ...(airport ? { airportCode: airport.code } : {}) }
+    if (index === 0) return { ...base, role: 'origin' }
+    if (index === lastIndex) return { ...base, role: 'return' }
+
+    const stay = pendingStays[0]
+    if (stay?.placeId === placeId) {
+      pendingStays.shift()
+      return { ...base, role: 'stay', nights: nightsOf(stay) }
+    }
+    return { ...base, role: 'connection' }
+  })
 }

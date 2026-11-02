@@ -5,6 +5,7 @@ import {
   daysBetween,
   endOfDay,
   localDate,
+  minutesBetween,
   startOfDay,
   tripLengthInDays,
   utcOffsetMinutes,
@@ -51,5 +52,12 @@ describe('time zones', () => {
   it('detects arrivals on the next local day', () => {
     expect(arrivalDayOffset('2026-11-29T20:55-03:00', BA, '2026-11-30T00:25-03:00', BA)).toBe(1)
     expect(arrivalDayOffset('2026-11-20T09:00-03:00', 'America/Sao_Paulo', '2026-11-20T12:00-03:00', BA)).toBe(0)
+  })
+})
+
+describe('minutesBetween', () => {
+  it('measures flight durations across midnight', () => {
+    expect(minutesBetween('2026-11-20T09:00-03:00', '2026-11-20T12:00-03:00')).toBe(180)
+    expect(minutesBetween('2026-11-29T20:55-03:00', '2026-11-30T00:25-03:00')).toBe(210)
   })
 })

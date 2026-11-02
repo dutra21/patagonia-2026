@@ -73,3 +73,8 @@ export function arrivalDayOffset(
 ): number {
   return daysBetween(localDate(departure, departureTimeZone), localDate(arrival, arrivalTimeZone))
 }
+
+/** Minutes between two instants (time zones do not matter: offsets are explicit). */
+export function minutesBetween(start: IsoDateTime, end: IsoDateTime): number {
+  return Math.round((Date.parse(end) - Date.parse(start)) / 60_000)
+}

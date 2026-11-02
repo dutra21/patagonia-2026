@@ -1,0 +1,66 @@
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+/* Dashed connector between stops. */
+.stop:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(50% + 0.75rem);
+  bottom: calc(-50% + 0.75rem);
+  left: calc(0.875rem - 1px);
+  border-left: 2px dashed var(--color-border-strong);
+}
+
+.marker {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: var(--color-surface-raised);
+  color: var(--color-accent);
+}
+
+.stop[data-role='stay'] .marker::before,
+.stop[data-role='connection'] .marker::before {
+  content: '';
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.stop[data-role='connection'] .marker::before {
+  background: transparent;
+  border: 2px solid var(--color-accent);
+}
+
+.name {
+  color: var(--color-text-strong);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.code {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
