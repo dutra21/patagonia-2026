@@ -1,0 +1,22 @@
+.badge {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  min-width: 2.75rem;
+  line-height: 1.1;
+}
+
+.day {
+  color: var(--color-text-strong);
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.month {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

@@ -1,0 +1,99 @@
+/*
+ * Palette (fixed) + semantic tokens per theme.
+ * Contrast (WCAG AA, >= 4.5:1 for text) was checked for every text/background pair used.
+ */
+:root {
+  --slate-950: #020617;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50: #f8fafc;
+  --white: #ffffff;
+  --accent: #38bdf8;
+  --accent-strong: #0369a1;
+
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  --content-max: 72rem;
+  --header-height: 3.5rem;
+  --tabbar-height: 4rem;
+}
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: var(--slate-950);
+  --color-surface: var(--slate-900);
+  --color-surface-raised: var(--slate-800);
+  --color-border: var(--slate-800);
+  --color-border-strong: var(--slate-700);
+  --color-text: var(--slate-200);
+  --color-text-strong: var(--white);
+  --color-text-muted: var(--slate-400);
+  --color-link: var(--accent);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--slate-950);
+  --color-focus: var(--accent);
+
+  --color-easy-bg: #052e16;
+  --color-easy-text: #86efac;
+  --color-moderate-bg: #422006;
+  --color-moderate-text: #fcd34d;
+  --color-hard-bg: #450a0a;
+  --color-hard-text: #fca5a5;
+  --color-neutral-bg: var(--slate-800);
+  --color-neutral-text: var(--slate-200);
+
+  --map-water: var(--slate-950);
+  --map-land: #16213a;
+  --map-highlight: #1e2a44;
+  --map-border: var(--slate-700);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: var(--slate-50);
+  --color-surface: var(--white);
+  --color-surface-raised: var(--slate-100);
+  --color-border: var(--slate-200);
+  --color-border-strong: var(--slate-300);
+  --color-text: var(--slate-900);
+  --color-text-strong: var(--slate-950);
+  --color-text-muted: var(--slate-600);
+  /* #38bdf8 fails contrast on white; text uses a darker sky. */
+  --color-link: var(--accent-strong);
+  --color-accent: var(--accent-strong);
+  --color-on-accent: var(--white);
+  --color-focus: var(--accent-strong);
+
+  --color-easy-bg: #dcfce7;
+  --color-easy-text: #14532d;
+  --color-moderate-bg: #fef3c7;
+  --color-moderate-text: #713f12;
+  --color-hard-bg: #fee2e2;
+  --color-hard-text: #7f1d1d;
+  --color-neutral-bg: var(--slate-100);
+  --color-neutral-text: var(--slate-700);
+
+  --map-water: #e0f2fe;
+  --map-land: var(--white);
+  --map-highlight: var(--slate-100);
+  --map-border: var(--slate-300);
+}

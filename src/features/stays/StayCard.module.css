@@ -1,0 +1,85 @@
+.card {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.city {
+  color: var(--color-link);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.name {
+  font-size: 1.25rem;
+}
+
+.dates {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.details {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.875rem;
+}
+
+.details div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.details dt {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.details dd {
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+
+.details .address {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.details .address dd {
+  text-align: start;
+  user-select: all;
+}
+
+.map {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.paid,
+.unpaid {
+  justify-self: start;
+  padding: 0.125rem var(--space-2);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.paid {
+  background: #dcfce7;
+  color: #14532d;
+}
+
+.unpaid {
+  background: #fef3c7;
+  color: #78350f;
+}

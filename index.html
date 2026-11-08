@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Roteiro, voos, hospedagens, passeios e checklist da viagem à Patagônia — 20 a 30/11/2026." />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#020617" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+    <meta name="apple-mobile-web-app-title" content="Patagonia" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Patagonia 2026</title>
+    <!-- Apply the saved theme before first paint (no flash). Key must match themeStore.ts. -->
+    <script>
+      ;(function () {
+        var theme = 'dark'
+        try {
+          if (JSON.parse(localStorage.getItem('patagonia-2026:theme')) === 'light') theme = 'light'
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme
+        if (theme === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f8fafc')
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

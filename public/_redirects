@@ -1,0 +1,4 @@
+# Cloudflare Pages: no rules needed.
+# With no top-level 404.html, Pages serves index.html (status 200) for every path that is not a file,
+# which is exactly the SPA rewrite. A "/* /index.html 200" rule is rejected by Pages as an infinite loop.
+# Netlify instead needs this rule:   /*  /index.html  200

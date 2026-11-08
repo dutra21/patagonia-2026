@@ -1,0 +1,66 @@
+.card {
+  padding: var(--space-2);
+  overflow: hidden;
+}
+
+.figure {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  background: var(--map-water);
+}
+
+.land {
+  fill: var(--map-land);
+  stroke: var(--map-border);
+  stroke-width: 0.6;
+}
+
+.argentina {
+  fill: var(--map-highlight);
+  stroke: var(--map-border);
+  stroke-width: 0.8;
+}
+
+
+
+
+.dot {
+  fill: var(--color-accent);
+  stroke: var(--map-water);
+  stroke-width: 2;
+}
+
+/* Halo keeps labels readable over the outline. */
+.label {
+  fill: var(--color-text-strong);
+  font-size: 13px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--map-water);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.note {
+  fill: var(--color-text-muted);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+
+
+
+
+.route {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.8;
+  stroke-dasharray: 5 5;
+  stroke-linecap: round;
+}

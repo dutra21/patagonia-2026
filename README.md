@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Patagonia 2026
 
-## Getting Started
+Site da viagem de 20 a 30/11/2026 (São Paulo → Buenos Aires → El Calafate → El Chaltén → Ushuaia → Buenos Aires → São Paulo).
+Funciona **offline**: depois de aberto uma vez com internet, tudo funciona em modo avião.
 
-First, run the development server:
+Vite + React 19 + TypeScript, PWA com `vite-plugin-pwa`. Sem backend e sem chamadas de rede em runtime.
+
+## Rodar
+
+Requer Node 24 (veja `.node-version`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev       # http://localhost:5173 (sem service worker)
+npm run build     # build de produção em dist/
+npm run preview   # serve dist/ em http://localhost:4173 (com service worker)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Testar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run typecheck
+npm run lint
+npm test          # Vitest (domínio + componentes)
+npm run test:tz   # os mesmos testes com TZ=UTC e TZ=America/Sao_Paulo
+npm run e2e       # Playwright: build + preview, inclui o teste offline
+npm run check     # typecheck + lint + test:tz + build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Para rodar os testes e2e contra outro servidor (por exemplo, o site publicado):
 
-## Learn More
+```bash
+E2E_BASE_URL=https://seu-site.pages.dev npm run e2e
+```
 
-To learn more about Next.js, take a look at the following resources:
+Na primeira vez, instale o navegador do Playwright com `npx playwright install chromium`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Editar os dados da viagem
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Todos os dados ficam em [`src/data/trip.ts`](src/data/trip.ts): voos, hospedagens, passeios, roteiro e checklist.
+Datas e horas vão sempre em ISO 8601 com offset (`2026-11-20T09:00-03:00`).
+Os testes de `src/data/trip.test.ts` acusam horário sem offset, id repetido, evento fora do dia certo etc.
 
-## Deploy on Vercel
+Itens ainda a confirmar estão marcados com `// TODO` no arquivo.
+**Não coloque** localizadores de reserva, passaporte, telefone ou e-mail: o site é público.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Imagens, mapa e ícones
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Os arquivos gerados ficam versionados. Só rode estes comandos quando mudar a origem:
+
+| Comando | Origem | Gera |
+|---|---|---|
+| `npm run images` | fotos em `assets-src/` | `src/assets/img/` (AVIF/WebP otimizados) |
+| `npm run map` | Natural Earth (pacote `world-atlas`) | `src/features/home/routeMapGeometry.ts` |
+| `npm run icons` | `public/favicon.svg` | ícones PWA em `public/` |
+
+## Deploy (Cloudflare Pages)
+
+Recomendado: Cloudflare Pages. É grátis, tem HTTPS e tem servidores em São Paulo e Buenos Aires.
+
+1. No painel da Cloudflare: **Workers & Pages → Create → Pages → Connect to Git** e escolha este repositório.
+2. Build command: `npm run build`. Build output directory: `dist`.
+3. Salve. Cada push na branch principal publica uma nova versão.
+
+Ou, sem Git: `npx wrangler pages deploy dist --project-name patagonia-2026`.
+
+O que já está configurado:
+
+- **Rotas (SPA):** o Pages devolve o `index.html` para qualquer caminho que não seja um arquivo, porque não existe `404.html`.
+  Por isso o [`public/_redirects`](public/_redirects) não tem regras: o Pages rejeita `/* /index.html 200` por considerar um loop infinito.
+- **Cache e segurança:** ficam em [`public/_headers`](public/_headers).
+  - `index.html`, `sw.js`, o manifest e as rotas usam `no-cache`.
+  - `assets/*` e `workbox-*` usam cache imutável de 1 ano.
+  - Há uma CSP que só permite recursos do próprio site.
+  Se o script de tema inline do `index.html` mudar, atualize o hash `sha256-…` na CSP. O teste e2e "CSP allows the inline theme script" avisa quando isso acontece.
+- **Indexação:** o [`public/robots.txt`](public/robots.txt) bloqueia buscadores. O site abre por link, mas não aparece no Google.
+
+## Instalar no celular
+
+Abra o site **uma vez com internet** antes da viagem. Depois disso ele funciona offline.
+
+- **iPhone (Safari):** botão Compartilhar → **Adicionar à Tela de Início**.
+  Instale de verdade: o Safari pode apagar o cache offline e o checklist de sites que ficam 7 dias sem uso, mas não faz isso com apps adicionados à Tela de Início.
+- **Android (Chrome):** menu ⋮ → **Instalar app** (ou "Adicionar à tela inicial").
+
+Quando houver versão nova, o app mostra **"Nova versão disponível"**. Ele só atualiza quando você toca em **Atualizar**.
+O checklist e o tema ficam salvos no próprio aparelho, e cada pessoa tem o seu.
