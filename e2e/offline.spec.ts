@@ -31,7 +31,7 @@ test('the whole app works offline after the first visit', async ({ context, page
     await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible()
   }
   await page.goto('/roteiro?dia=3')
-  await expect(page.getByRole('heading', { level: 2, name: 'Estrada para El Chaltén + miradores' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: 'Estrada para El Chaltén + Chorrillo e Miradores' })).toBeVisible()
 
   // 4. Client-side navigation through the menu.
   await page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name: 'Voos' }).click()
@@ -44,7 +44,7 @@ test('the whole app works offline after the first visit', async ({ context, page
   await page.reload()
   await expect(page.getByRole('heading', { level: 1, name: 'Checklist' })).toBeVisible()
   await expect(page.getByRole('checkbox', { name: 'Seguro viagem' })).toBeChecked()
-  await expect(page.getByText('1 de 32 itens prontos')).toBeVisible()
+  await expect(page.getByText('1 de 38 itens prontos')).toBeVisible()
 })
 
 test('Chrome considers the app installable', async ({ page }) => {

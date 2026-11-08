@@ -36,6 +36,8 @@ export function CardGrid({ children }: { children: ReactNode }) {
     observer.observe(list)
     for (const item of list.children) observer.observe(item.firstElementChild ?? item)
     return () => observer.disconnect()
+    // `children` is not read inside: it re-runs the packing (and re-observes the items) when the cards change.
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [children])
 
   return (

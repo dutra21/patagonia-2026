@@ -4,11 +4,11 @@ test('checked items survive a reload', async ({ page }) => {
   await page.goto('/checklist')
   const item = page.getByRole('checkbox', { name: 'Seguro viagem' })
   await item.check()
-  await expect(page.getByText('1 de 32 itens prontos')).toBeVisible()
+  await expect(page.getByText('1 de 38 itens prontos')).toBeVisible()
 
   await page.reload()
   await expect(page.getByRole('checkbox', { name: 'Seguro viagem' })).toBeChecked()
-  await expect(page.getByText('1 de 32 itens prontos')).toBeVisible()
+  await expect(page.getByText('1 de 38 itens prontos')).toBeVisible()
 })
 
 test('another tab sees the change', async ({ context, page }) => {
