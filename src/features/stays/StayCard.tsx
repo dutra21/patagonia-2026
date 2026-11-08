@@ -25,6 +25,9 @@ export function StayCard({ stay, place }: { stay: Stay; place: Place }) {
       <h2 id={headingId} className={styles.name}>
         {stay.name}
       </h2>
+      <p className={stay.payment.paid ? styles.paid : styles.unpaid}>
+        {stay.payment.paid ? 'Pago' : `Não pago · ${stay.payment.amount}`}
+      </p>
       <p className={styles.dates}>
         <time dateTime={checkIn.date}>{formatDayMonth(checkIn.date)}</time>
         {' → '}

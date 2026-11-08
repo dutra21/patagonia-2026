@@ -69,6 +69,7 @@ export const trip: Trip = {
       address: 'Fuentes del Coyle 53, El Calafate',
       checkIn: { date: '2026-11-20', from: '2026-11-20T15:00-03:00' },
       checkOut: { date: '2026-11-22', until: '2026-11-22T10:00-03:00' },
+      payment: { paid: true },
     },
     {
       id: 'chalten-ruta-40',
@@ -76,7 +77,8 @@ export const trip: Trip = {
       name: 'Apart Ruta 40',
       address: 'Comandante Arrua, El Chaltén, Argentina',
       checkIn: { date: '2026-11-22', from: '2026-11-22T14:00-03:00', until: '2026-11-22T20:30-03:00' },
-      checkOut: { date: '2026-11-26' }, // TODO: confirmar horário do check-out
+      checkOut: { date: '2026-11-26', until: '2026-11-26T10:00-03:00' },
+      payment: { paid: false, amount: 'US$ 310 por casal' },
     },
     {
       id: 'ushuaia-airbnb',
@@ -84,7 +86,8 @@ export const trip: Trip = {
       name: 'Airbnb em Ushuaia',
       address: 'Goleta Florencia 595, 2do I, Ushuaia, Tierra del Fuego, V9410',
       checkIn: { date: '2026-11-26', from: '2026-11-26T15:00-03:00' },
-      checkOut: { date: '2026-11-29' }, // TODO: confirmar horário do check-out
+      checkOut: { date: '2026-11-29', until: '2026-11-29T10:00-03:00' },
+      payment: { paid: true },
     },
     {
       id: 'buenos-aires-regis',
@@ -92,7 +95,8 @@ export const trip: Trip = {
       name: 'Hotel Regis',
       address: 'Lavalle 813, 1047 Buenos Aires, Argentina',
       checkIn: { date: '2026-11-29', from: '2026-11-29T14:00-03:00' },
-      checkOut: { date: '2026-11-30' }, // TODO: confirmar horário do check-out
+      checkOut: { date: '2026-11-30', until: '2026-11-30T11:00-03:00' },
+      payment: { paid: false, amount: 'US$ 39,87 por casal' },
     },
   ],
 
@@ -102,67 +106,121 @@ export const trip: Trip = {
       name: 'Glaciar Perito Moreno',
       placeId: 'el-calafate',
       date: '2026-11-21',
-      description: 'Parque Nacional Los Glaciares e passarelas do Perito Moreno.',
-      transport: 'De carro alugado',
-      // TODO: confirmar dificuldade
+      difficulty: 'easy',
+      description: 'Pasarelas + Safari Azul. Encher o tanque em El Calafate, porque não tem posto no parque. Pasarelas: 09:00 → 11:05 (~2h nos circuitos; sair às 11:05, no máximo). O estacionamento fica a ~10 min de caminhada dos mirantes. Depois, ~10–15 min de carro até o Puerto “Bajo de las Sombras”, ~6–7 km antes das pasarelas na volta pela mesma estrada. Safari Azul: encontro às 11:45, chegando por volta de 11:25.',
+      transport: 'De carro alugado, ~80 km pela RP11 (toda asfaltada), ~1h15–1h20. A portaria do parque fica mais ou menos na metade do caminho; é lá que se paga a entrada, então comprar online antes para não pegar fila.',
+      meetingPoint: 'Saída do Airbnb (Fuentes del Coyle 53) às 07:30, no máximo 07:45. Safari Azul: Puerto “Bajo de las Sombras”, 11:45 (chegar ~11:25).',
+      tickets: {
+        product: 'Flexipass Los Glaciares, 7 dias',
+        price: '$175.500',
+        website: 'ventaweb.apn.gob.ar → Parque Nacional Los Glaciares',
+        select: '“Flexipass Zona Sur (Los Glaciares)” → 7 días',
+        purchase: 'Antecipado. Um passe por pessoa, vinculado ao passaporte.',
+        entrance: 'Río Mitre / Glaciar Perito Moreno',
+        note: 'Este primeiro uso ativa o passe.',
+      },
     },
     {
-      id: 'miradores-chalten',
-      name: 'Mirador de los Cóndores e Mirador de las Águilas',
+      id: 'chorrillo-miradores',
+      name: 'Chorrillo del Salto e Miradores de los Cóndores e de las Águilas',
       placeId: 'el-chalten',
       date: '2026-11-22',
-      description: 'Trilha curta (cerca de 2 km) depois de chegar a El Chaltén.',
-      // TODO: confirmar dificuldade
+      difficulty: 'easy',
+      description: 'Dois passeios curtos no dia de chegada. Tarde: cachoeira Chorrillo del Salto, trilha de ~3 km até uma queda d\'água de 20 m no meio da floresta patagônica de lengas, quase plana, ~1h30 contando o deslocamento. Fim do dia: Miradores de los Cóndores e de las Águilas, subida de ~2 km (~1h30 ida e volta) com vista da cidade, do Fitz Roy e do Lago Viedma — ideal no pôr do sol.',
+      transport: 'Para o Chorrillo: de carro ou a pé (~3,5 km ao norte do centro pela estrada do Lago del Desierto, com estacionamento perto da trilha). Para os Miradores: a pé, saindo do centro de visitantes na entrada da cidade.',
+      tickets: {
+        product: 'Incluso no Flexipass (dia 2 de 7)',
+        entrance: 'Base Fitz Roy (Chorrillo) e Los Cóndores (miradores)',
+      },
+    },
+    {
+      id: 'piedras-blancas-los-tres',
+      name: 'Glaciar Piedras Blancas e Laguna de los Tres',
+      placeId: 'el-chalten',
+      date: '2026-11-23',
+      difficulty: 'hard',
+      description: 'Ida e volta pela mesma trilha. El Pilar → Mirador Glaciar Piedras Blancas (~1h30) → Campamento Poincenot / Río Blanco (~1 h). Opcional: subida até a Laguna de los Tres e a Laguna Sucia (~1 km e 400 m de desnível, ~1 h subindo e ~45 min descendo). Volta pelo mesmo caminho (~2h30, quase toda descendo). Total: ~19 km e 8–9 h com a lagoa, ou ~14 km e 5–6 h sem ela.',
+      transport: 'De carro até a Hostería El Pilar (~30 min ao norte pela estrada do Lago del Desierto)',
+      meetingPoint: 'Sair da hospedagem às ~7h45',
+      tickets: {
+        product: 'Incluso no Flexipass (dia 3 de 7)',
+        entrance: 'Río Eléctrico',
+      },
     },
     {
       id: 'laguna-capri',
       name: 'Laguna Capri',
       placeId: 'el-chalten',
-      date: '2026-11-23',
-      description: 'Trilha até a Laguna Capri.',
-      // TODO: confirmar dificuldade
-    },
-    {
-      id: 'piedras-blancas',
-      name: 'Glaciar Piedras Blancas',
-      placeId: 'el-chalten',
       date: '2026-11-24',
-      description: 'Trilha até o mirante do Glaciar Piedras Blancas.',
-      // TODO: confirmar dificuldade
+      difficulty: 'moderate',
+      description: '~8 km ida e volta (3–4 h), com subida constante no início. Passa pelo Mirador del Fitz Roy e chega a uma lagoa no bosque com o Fitz Roy ao fundo.',
+      transport: 'A pé, saindo do fim da Av. San Martín (trilha sinalizada "Laguna de los Tres / Fitz Roy")',
+      tickets: {
+        product: 'Incluso no Flexipass (dia 4 de 7)',
+        entrance: 'Base Fitz Roy',
+      },
     },
     {
-      id: 'laguna-de-los-tres',
-      name: 'Laguna de los Tres',
+      id: 'laguna-torre',
+      name: 'Laguna Torre',
       placeId: 'el-chalten',
       date: '2026-11-25',
-      description: 'Trilha até a Laguna de los Tres, na base do Fitz Roy.',
-      // TODO: confirmar dificuldade
+      difficulty: 'hard',
+      description: '~18 km ida e volta (6–7 h), pouco desnível. Passa pelo Mirador del Cerro Torre e chega à lagoa com icebergs na frente do Cerro Torre e do Glaciar Grande. Opcional: Mirador Maestri (+1 h ida e volta) para ver o glaciar mais de perto.',
+      transport: 'A pé, saindo do fim da Av. San Martín (trilha sinalizada "Laguna Torre")',
+      tickets: {
+        product: 'Incluso no Flexipass (dia 5 de 7)',
+        entrance: 'Base Fitz Roy',
+      },
     },
     {
       id: 'canal-beagle',
-      name: 'Navegação no Canal de Beagle',
+      name: 'Navegação no Canal de Beagle + caminhada na Ilha Martillo',
       placeId: 'ushuaia',
       date: '2026-11-27',
       start: '2026-11-27T08:30-03:00',
-      description: 'Traslado no ônibus da empresa e navegação pelo Canal de Beagle: Ilha dos Pássaros, Ilha dos Lobos-Marinhos, Farol Les Eclaireurs e Ilha Martillo.',
+      difficulty: 'easy',
+      description: 'Navegação pelo Canal de Beagle passando pela Ilha dos Pássaros (cormorões), pela Ilha dos Lobos-Marinhos e pelo Farol Les Eclaireurs, com desembarque e caminhada guiada na Ilha Martillo. São cerca de 1 h a pé entre os ninhos de pinguins-de-magalhães e papua, em grupos pequenos. Fim de novembro é época de ninhos, então terão muitos pinguins. Duração total de ~6–7 h.',
       transport: 'Ônibus da empresa + barco',
       meetingPoint: 'Encontro 30 min antes no escritório da Piratour, no Tourist Pier',
-      // TODO: confirmar dificuldade
     },
     {
       id: 'tierra-del-fuego',
-      name: 'Parque Nacional Tierra del Fuego',
+      name: 'Parque Nacional Tierra del Fuego – Senda Costera',
       placeId: 'ushuaia',
       date: '2026-11-28',
-      description: 'Trilhas e Trem do Fim do Mundo.',
-      transport: 'A definir', // TODO: definir transporte
-      // TODO: confirmar dificuldade
+      difficulty: 'moderate',
+      description: 'Dia de trilha a pé dentro do parque. ~9h: transfer até a Bahía Ensenada (Correio do Fim do Mundo e mirante do canal). Senda Costera: ~8 km (3–4 h) pela costa do Canal de Beagle até o Lago Roca. Almoço no Centro Alakush (cafeteria), no Lago Roca. Opcional, se ainda tiverem energia: Senda Hito XXIV, ~7 km ida e volta (~2h30), plana, pela margem do lago até a fronteira com o Chile. Volta: transfer saindo do Lago Roca ou de Lapataia; se der tempo antes da volta, passem pela Laguna Negra, pela Castorera e pela placa de fim da Ruta 3. Totais: ~8 km só a Costera, ~15 km com o Hito XXIV. Dificuldade moderada pela distância; o terreno é fácil, com raízes, lama e sobe-e-desce curto.',
+      transport: 'Minibus/transfer para o parque saindo do centro de Ushuaia (~30 min), com paradas em Ensenada, Lago Roca e Lapataia e horários fixos de volta. Confirmem os horários na véspera e anotem o último horário de retorno. Outra opção é táxi/remis, combinando o horário e o local de busca.',
+      tickets: {
+        product: 'Passe diário',
+        price: '$40.000',
+        website: 'ventaweb.apn.gob.ar → Parque Nacional Tierra del Fuego',
+        select: 'Ingresso diário, tarifa General',
+        purchase: 'Antecipado (também dá para pagar na portaria)',
+      },
     },
   ],
 
   transfers: [
-    { id: 'calafate-chalten', mode: 'car', from: 'el-calafate', to: 'el-chalten', date: '2026-11-22' }, // TODO: horário de saída a definir
-    { id: 'chalten-calafate', mode: 'car', from: 'el-chalten', to: 'el-calafate', date: '2026-11-26' }, // TODO: horário de saída a definir
+    {
+      id: 'calafate-chalten',
+      mode: 'car',
+      from: 'el-calafate',
+      to: 'el-chalten',
+      date: '2026-11-22',
+      start: '2026-11-22T10:00-03:00',
+      note: 'De carro, ~215 km (RP11, RN40 e RP23, tudo asfaltado), ~2h45 de direção; com paradas no Parador La Leona (meio do caminho) e no mirante do Fitz Roy, conte 3h15–3h30. Saída às 10:00 (horário do check-out), chegada por volta das 13:15, perto do check-in das 14:00. Cuidados: vento forte na RN40, guanacos na pista e nenhum posto entre El Chaltén e El Calafate (quase sem sinal de celular fora da La Leona).',
+    },
+    {
+      id: 'chalten-calafate',
+      mode: 'car',
+      from: 'el-chalten',
+      to: 'el-calafate',
+      date: '2026-11-26',
+      start: '2026-11-26T08:00-03:00',
+      note: 'De carro até o Aeroporto de El Calafate (FTE), ~200 km, 2h30–2h45 de direção (~3h com 20 min na La Leona). O acesso ao aeroporto sai da RP11 antes do centro. Saída ideal às 08:00, no máximo 08:30, para chegar às 11:30 e ter folga na vistoria do carro (devolução às 12:00; voo às 14:30). Abasteçam no YPF de El Chaltén na saída; se a locadora exigir completar o tanque, o desvio por um posto em El Calafate soma 25–30 min, então saiam às 07:30. Cuidados: vento forte na RN40, guanacos na pista e nenhum posto entre El Chaltén e El Calafate (quase sem sinal de celular fora da La Leona).',
+    },
   ],
 
   carRentals: [
@@ -197,41 +255,41 @@ export const trip: Trip = {
     {
       date: '2026-11-22',
       overnight: 'el-chalten',
-      title: 'Estrada para El Chaltén + miradores',
-      description: 'De carro até El Chaltén e trilha curta até os miradores.',
+      title: 'Estrada para El Chaltén + Chorrillo e Miradores',
+      description: 'Saída às 10:00 de carro até El Chaltén (chegada ~13:15), cachoeira Chorrillo del Salto à tarde e miradores no pôr do sol.',
       items: [
         { kind: 'check-out', id: 'calafate-airbnb' },
         { kind: 'transfer', id: 'calafate-chalten' },
         { kind: 'check-in', id: 'chalten-ruta-40' },
-        { kind: 'activity', id: 'miradores-chalten' },
+        { kind: 'activity', id: 'chorrillo-miradores' },
       ],
     },
     {
       date: '2026-11-23',
       overnight: 'el-chalten',
-      title: 'Laguna Capri',
-      description: 'Trilha até a Laguna Capri.',
-      items: [{ kind: 'activity', id: 'laguna-capri' }],
+      title: 'Glaciar Piedras Blancas e Laguna de los Tres',
+      description: 'Ida e volta saindo da Hostería El Pilar, com subida opcional à Laguna de los Tres.',
+      items: [{ kind: 'activity', id: 'piedras-blancas-los-tres' }],
     },
     {
       date: '2026-11-24',
       overnight: 'el-chalten',
-      title: 'Glaciar Piedras Blancas',
-      description: 'Trilha até o mirante do Glaciar Piedras Blancas.',
-      items: [{ kind: 'activity', id: 'piedras-blancas' }],
+      title: 'Laguna Capri',
+      description: 'Trilha moderada até a lagoa no bosque com o Fitz Roy ao fundo.',
+      items: [{ kind: 'activity', id: 'laguna-capri' }],
     },
     {
       date: '2026-11-25',
       overnight: 'el-chalten',
-      title: 'Laguna de los Tres',
-      description: 'Trilha até a base do Fitz Roy.',
-      items: [{ kind: 'activity', id: 'laguna-de-los-tres' }],
+      title: 'Laguna Torre',
+      description: 'Trilha até a lagoa com icebergs na frente do Cerro Torre.',
+      items: [{ kind: 'activity', id: 'laguna-torre' }],
     },
     {
       date: '2026-11-26',
       overnight: 'ushuaia',
       title: 'Rumo a Ushuaia',
-      description: 'De carro até El Calafate, devolução do carro e voo para Ushuaia.',
+      description: 'Saída de El Chaltén às 08:00, carro devolvido no aeroporto de El Calafate às 12:00 e voo para Ushuaia às 14:30.',
       items: [
         { kind: 'check-out', id: 'chalten-ruta-40' },
         { kind: 'transfer', id: 'chalten-calafate' },
@@ -243,15 +301,15 @@ export const trip: Trip = {
     {
       date: '2026-11-27',
       overnight: 'ushuaia',
-      title: 'Canal de Beagle',
-      description: 'Ilha dos Pássaros, Ilha dos Lobos-Marinhos, Farol Les Eclaireurs e Ilha Martillo.',
+      title: 'Canal de Beagle + Ilha Martillo',
+      description: 'Navegação com Ilha dos Pássaros, Ilha dos Lobos-Marinhos e Farol Les Eclaireurs, e caminhada entre pinguins na Ilha Martillo.',
       items: [{ kind: 'activity', id: 'canal-beagle' }],
     },
     {
       date: '2026-11-28',
       overnight: 'ushuaia',
-      title: 'Parque Nacional Tierra del Fuego',
-      description: 'Trilhas e Trem do Fim do Mundo.',
+      title: 'Parque Nacional Tierra del Fuego – Senda Costera',
+      description: 'Caminhada pela costa do Canal de Beagle até o Lago Roca, com Senda Hito XXIV opcional.',
       items: [{ kind: 'activity', id: 'tierra-del-fuego' }],
     },
     {
@@ -302,6 +360,10 @@ export const checklistItems: ChecklistItem[] = [
   { id: 'driver-license', category: 'documents', label: 'CNH para o carro alugado' },
   { id: 'insurance', category: 'documents', label: 'Seguro viagem' },
   { id: 'boarding', category: 'documents', label: 'Cartões de embarque salvos offline' },
+  { id: 'passport-hikes', category: 'documents', label: 'Levar o passaporte em todos os passeios' },
+  { id: 'flexipass', category: 'documents', label: 'Comprar Flexipass Zona Sur 7 dias (Los Glaciares), um por pessoa: $175.500 cada' },
+  { id: 'tdf-ticket', category: 'documents', label: 'Comprar ingresso do PN Tierra del Fuego, um por pessoa: $40.000 cada' },
+  { id: 'tickets-offline', category: 'documents', label: 'Salvar os ingressos offline no celular. Nas guaritas de El Chaltén não aceitam dinheiro e o sinal pode falhar.' },
   { id: 'cards', category: 'documents', label: 'Cartão de crédito internacional' },
   { id: 'cash', category: 'documents', label: 'Dinheiro em espécie (pesos ou dólares)' },
 
@@ -311,12 +373,14 @@ export const checklistItems: ChecklistItem[] = [
   { id: 'offline-maps', category: 'tech', label: 'Mapas offline baixados' },
   { id: 'esim', category: 'tech', label: 'Chip ou eSIM internacional' },
   { id: 'headphones', category: 'tech', label: 'Fone de ouvido' },
+  { id: 'cameras', category: 'tech', label: 'Câmeras' },
 
   { id: 'sunscreen', category: 'health', label: 'Protetor solar' },
   { id: 'lip-balm', category: 'health', label: 'Protetor labial' },
   { id: 'meds', category: 'health', label: 'Remédios de uso pessoal' },
   { id: 'first-aid', category: 'health', label: 'Kit de primeiros socorros (curativos para bolhas)' },
   { id: 'seasickness', category: 'health', label: 'Remédio para enjoo (navegação)' },
+  { id: 'carbogel', category: 'health', label: 'Carbogel' },
 
   { id: 'daypack', category: 'other', label: 'Mochila de ataque' },
   { id: 'bottle', category: 'other', label: 'Garrafa de água' },

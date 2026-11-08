@@ -34,10 +34,3 @@
 .bar::-moz-progress-bar {
   background: var(--color-accent);
 }
-
-.categories {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
-  gap: var(--space-4);
-  align-items: start;
-}

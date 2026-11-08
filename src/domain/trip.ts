@@ -38,7 +38,7 @@ function resolveRef(trip: Trip, day: ItineraryDay, ref: ItineraryRef): TripEvent
         ...base,
         kind: transfer.mode,
         title: `${from.name} → ${place(transfer.to).name}`,
-        detail: transfer.mode === 'car' ? 'De carro' : 'De ônibus',
+        detail: transfer.note ?? (transfer.mode === 'car' ? 'De carro' : 'De ônibus'),
         ...(transfer.start ? { start: transfer.start } : {}),
         timeZone: from.timeZone,
         endTimeZone: from.timeZone,

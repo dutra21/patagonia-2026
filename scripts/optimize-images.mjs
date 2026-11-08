@@ -21,6 +21,23 @@ const jobs = [
     format: 'webp',
     options: { quality: 75 },
   })),
+  // Activity photos: 16:9, shown at card width (max ~480px), 800px covers 1.5x screens.
+  ...Object.entries({
+    'perito-moreno': 'perito_moreno.jpeg',
+    'chorrillo-miradores': 'Miradoradores_Condores_Aguilas.jpg',
+    'piedras-blancas-los-tres': 'glaciar-piedras-blancas.jpg',
+    'laguna-capri': 'laguna_capri.jpg',
+    'laguna-torre': 'laguna-torre.webp',
+    'canal-beagle': 'canal-beagle.avif',
+    'tierra-del-fuego': 'parque-nacional-tierra.jpg',
+  }).map(([id, input]) => ({
+    input,
+    output: `activity-${id}.webp`,
+    width: 800,
+    height: 450,
+    format: 'webp',
+    options: { quality: 72 },
+  })),
 ]
 
 await mkdir(OUT, { recursive: true })

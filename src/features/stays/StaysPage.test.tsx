@@ -11,7 +11,7 @@ describe('StaysPage', () => {
     expect(within(card).getByText('El Chaltén')).toBeInTheDocument()
     expect(within(card).getByText(/4 noites/)).toBeInTheDocument()
     expect(within(card).getByText('14:00–20:30')).toBeInTheDocument()
-    expect(within(card).getByText('horário a confirmar')).toBeInTheDocument()
+    expect(within(card).getByText('até 10:00')).toBeInTheDocument()
     expect(within(card).getByText('Comandante Arrua, El Chaltén, Argentina')).toBeInTheDocument()
   })
 

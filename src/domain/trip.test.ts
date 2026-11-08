@@ -62,7 +62,7 @@ describe('getNextSteps', () => {
   })
 
   it('drops untimed events once the next timed event of the day has started', () => {
-    // 26/11: check-out and drive have no time; the car drop-off is at 12:00.
+    // 26/11: check-out is due 10:00, the drive starts 08:00 and the car drop-off is at 12:00.
     expect(getNextSteps(trip, at('2026-11-26T09:00-03:00'), 1)[0]?.id).toBe('check-out:chalten-ruta-40')
     expect(getNextSteps(trip, at('2026-11-26T12:30-03:00'), 1)[0]?.id).toBe('flight:fte-ush')
   })

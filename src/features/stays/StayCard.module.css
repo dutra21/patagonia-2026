@@ -64,3 +64,22 @@
   font-size: 0.875rem;
   font-weight: 600;
 }
+
+.paid,
+.unpaid {
+  justify-self: start;
+  padding: 0.125rem var(--space-2);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.paid {
+  background: #dcfce7;
+  color: #14532d;
+}
+
+.unpaid {
+  background: #fef3c7;
+  color: #78350f;
+}

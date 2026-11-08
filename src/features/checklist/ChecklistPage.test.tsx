@@ -17,8 +17,8 @@ describe('ChecklistPage', () => {
     for (const name of ['Roupas', 'Documentos', 'Tecnologia', 'Saúde', 'Outros']) {
       expect(category(name)).toBeInTheDocument()
     }
-    expect(within(category('Documentos')).getByText('0 de 6 itens marcados')).toBeInTheDocument()
-    expect(screen.getByText(/de 32 itens prontos/)).toHaveTextContent('0 de 32 itens prontos')
+    expect(within(category('Documentos')).getByText('0 de 10 itens marcados')).toBeInTheDocument()
+    expect(screen.getByText(/de 38 itens prontos/)).toHaveTextContent('0 de 38 itens prontos')
   })
 
   it('checks an item, updates the counters and saves it', async () => {
@@ -29,8 +29,8 @@ describe('ChecklistPage', () => {
     await user.click(box)
 
     expect(box).toBeChecked()
-    expect(within(category('Documentos')).getByText('1 de 6 itens marcados')).toBeInTheDocument()
-    expect(screen.getByText(/de 32 itens prontos/)).toHaveTextContent('1 de 32 itens prontos')
+    expect(within(category('Documentos')).getByText('1 de 10 itens marcados')).toBeInTheDocument()
+    expect(screen.getByText(/de 38 itens prontos/)).toHaveTextContent('1 de 38 itens prontos')
     expect(stored()).toEqual({ insurance: true })
 
     await user.click(box)

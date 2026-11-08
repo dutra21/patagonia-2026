@@ -24,7 +24,7 @@ describe('ItineraryPage', () => {
     expect(router.state.location.search).toBe('?dia=3')
     const [day] = screen.getAllByRole('article')
     expect(screen.getAllByRole('article')).toHaveLength(1)
-    expect(within(day as HTMLElement).getByRole('heading', { name: 'Estrada para El Chaltén + miradores' })).toBeInTheDocument()
+    expect(within(day as HTMLElement).getByRole('heading', { name: 'Estrada para El Chaltén + Chorrillo e Miradores' })).toBeInTheDocument()
     expect(within(day as HTMLElement).getByText('Pernoite em El Chaltén')).toBeInTheDocument()
     expect(within(picker).getByRole('link', { name: 'Dia 3' })).toHaveAttribute('aria-current', 'true')
 
@@ -50,7 +50,7 @@ describe('ItineraryPage', () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-11-23T08:00-03:00'))
     renderRoute('/roteiro')
-    const today = screen.getByRole('article', { name: 'Laguna Capri' })
+    const today = screen.getByRole('article', { name: 'Glaciar Piedras Blancas e Laguna de los Tres' })
     expect(within(today).getByText('Hoje')).toBeInTheDocument()
   })
 })

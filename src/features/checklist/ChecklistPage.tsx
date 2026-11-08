@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router'
 import { checklistCategories, checklistItems } from '../../data/trip'
 import { getChecklistProgress } from '../../domain/checklist'
+import { CardGrid } from '../../shared/ui/CardGrid'
 import { ChipNav } from '../../shared/ui/ChipNav'
 import { PageHeader } from '../../shared/ui/PageHeader'
 import { CategoryCard } from './CategoryCard'
@@ -41,11 +42,13 @@ export function ChecklistPage() {
         ]}
       />
 
-      <div className={styles.categories}>
+      <CardGrid>
         {visible.map((categoryProgress) => (
-          <CategoryCard key={categoryProgress.category.id} progress={categoryProgress} checked={checked} onToggle={toggle} />
+          <li key={categoryProgress.category.id}>
+            <CategoryCard progress={categoryProgress} checked={checked} onToggle={toggle} />
+          </li>
         ))}
-      </div>
+      </CardGrid>
 
       <ResetChecklist checkedCount={progress.done} onReset={reset} />
     </>

@@ -13,9 +13,17 @@ describe('ActivitiesPage', () => {
 
   it('shows the meeting point and time of the Beagle trip', () => {
     renderRoute('/passeios')
-    const card = screen.getByRole('article', { name: 'Navegação no Canal de Beagle' })
+    const card = screen.getByRole('article', { name: 'Navegação no Canal de Beagle + caminhada na Ilha Martillo' })
     expect(within(card).getByText('08:30')).toBeInTheDocument()
     expect(within(card).getByText(/Piratour/)).toBeInTheDocument()
+  })
+
+  it('shows the ticket section of the Perito Moreno', () => {
+    renderRoute('/passeios')
+    const card = screen.getByRole('article', { name: 'Glaciar Perito Moreno' })
+    const tickets = within(card).getByRole('region', { name: 'Ingresso' })
+    expect(within(tickets).getByText('Flexipass Los Glaciares, 7 dias')).toBeInTheDocument()
+    expect(within(tickets).getByText('$175.500')).toBeInTheDocument()
   })
 
   it('filters by city through the URL', async () => {

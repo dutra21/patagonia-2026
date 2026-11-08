@@ -1,14 +1,18 @@
 import type { Activity, Place } from '../../domain/types'
 import { formatLongDate, formatTime } from '../../shared/lib/format'
 import { Card } from '../../shared/ui/Card'
+import { activityPhotos } from './activityPhotos'
+import { TicketSection } from './TicketSection'
 import { DifficultyBadge } from './DifficultyBadge'
 import styles from './ActivityCard.module.css'
 
 export function ActivityCard({ activity, place }: { activity: Activity; place: Place }) {
   const headingId = `passeio-${activity.id}`
+  const photo = activityPhotos[activity.id]
 
   return (
     <Card as="article" aria-labelledby={headingId} className={styles.card}>
+      {photo ? <img className={styles.photo} src={photo} alt="" width={800} height={450} loading="lazy" decoding="async" /> : null}
       <header className={styles.header}>
         <h2 id={headingId} className={styles.name}>
           {activity.name}
@@ -42,6 +46,7 @@ export function ActivityCard({ activity, place }: { activity: Activity; place: P
           ) : null}
         </dl>
       ) : null}
+      {activity.tickets ? <TicketSection ticket={activity.tickets} /> : null}
     </Card>
   )
 }

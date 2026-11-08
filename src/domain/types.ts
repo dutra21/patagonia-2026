@@ -42,9 +42,23 @@ export interface Stay {
   address: string
   checkIn: { date: IsoDate; from?: IsoDateTime; until?: IsoDateTime }
   checkOut: { date: IsoDate; until?: IsoDateTime }
+  payment: { paid: true } | { paid: false; amount: string }
 }
 
 export type Difficulty = 'easy' | 'moderate' | 'hard'
+
+export interface Ticket {
+  /** What gets bought or used, e.g. "Flexipass Los Glaciares, 7 dias". */
+  product: string
+  price?: string
+  website?: string
+  /** What to pick on the website. */
+  select?: string
+  purchase?: string
+  /** Park entrance used on the day. */
+  entrance?: string
+  note?: string
+}
 
 export interface Activity {
   id: string
@@ -58,6 +72,7 @@ export interface Activity {
   meetingPoint?: string
   /** Undefined while not confirmed. */
   difficulty?: Difficulty
+  tickets?: Ticket
 }
 
 export type TransferMode = 'car' | 'bus'
@@ -69,6 +84,8 @@ export interface Transfer {
   to: PlaceId
   date: IsoDate
   start?: IsoDateTime
+  /** Route, timing and driving tips; shown as the detail line. */
+  note?: string
 }
 
 export interface CarRental {
