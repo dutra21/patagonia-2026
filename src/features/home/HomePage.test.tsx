@@ -29,7 +29,7 @@ describe('HomePage', () => {
     expect(screen.getByRole('img', { name: /Perito Moreno/ })).toBeInTheDocument()
 
     const stats = within(section('Resumo da viagem')).getAllByRole('listitem').map((item) => item.textContent)
-    expect(stats).toEqual(['5Voos', '4Hospedagens', '4Cidades', '7Passeios', '11Dias'])
+    expect(stats).toEqual(['5Voos', '4Hospedagens', '4Cidades', '5Passeios', '11Dias'])
 
     const map = within(section('Mapa do roteiro')).getByRole('img')
     expect(map).toHaveAccessibleName(

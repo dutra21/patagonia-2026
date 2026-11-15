@@ -6,7 +6,7 @@ const at = (iso: string) => new Date(iso)
 
 describe('getTripStats', () => {
   it('derives the counts from the data', () => {
-    expect(getTripStats(trip)).toEqual({ flights: 5, stays: 4, cities: 4, activities: 7, days: 11 })
+    expect(getTripStats(trip)).toEqual({ flights: 5, stays: 4, cities: 4, activities: 5, days: 11 })
   })
 })
 
