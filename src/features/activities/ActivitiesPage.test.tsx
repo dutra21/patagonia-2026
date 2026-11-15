@@ -7,7 +7,7 @@ describe('ActivitiesPage', () => {
   it('lists every activity with a difficulty in text', () => {
     renderRoute('/passeios')
     const cards = screen.getAllByRole('article')
-    expect(cards).toHaveLength(7)
+    expect(cards).toHaveLength(5)
     for (const card of cards) expect(within(card).getByText(/^(Fácil|Moderado|Difícil|A confirmar)$/)).toBeInTheDocument()
   })
 
@@ -22,8 +22,8 @@ describe('ActivitiesPage', () => {
     renderRoute('/passeios')
     const card = screen.getByRole('article', { name: 'Glaciar Perito Moreno' })
     const tickets = within(card).getByRole('region', { name: 'Ingresso' })
-    expect(within(tickets).getByText('Flexipass Los Glaciares, 7 dias')).toBeInTheDocument()
-    expect(within(tickets).getByText('$175.500')).toBeInTheDocument()
+    expect(within(tickets).getByText('Flexipass Los Glaciares, 3 dias')).toBeInTheDocument()
+    expect(within(tickets).getByText('$100.000')).toBeInTheDocument()
   })
 
   it('filters by city through the URL', async () => {
@@ -35,11 +35,11 @@ describe('ActivitiesPage', () => {
 
     expect(router.state.location.search).toBe('?cidade=ushuaia')
     expect(screen.getAllByRole('article')).toHaveLength(2)
-    expect(screen.getByText('2 de 7 passeios.')).toBeInTheDocument()
+    expect(screen.getByText('2 de 5 passeios.')).toBeInTheDocument()
   })
 
   it('ignores an unknown city', () => {
     renderRoute('/passeios?cidade=lisboa')
-    expect(screen.getAllByRole('article')).toHaveLength(7)
+    expect(screen.getAllByRole('article')).toHaveLength(5)
   })
 })

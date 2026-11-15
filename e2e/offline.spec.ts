@@ -31,7 +31,7 @@ test('the whole app works offline after the first visit', async ({ context, page
     await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible()
   }
   await page.goto('/roteiro?dia=3')
-  await expect(page.getByRole('heading', { level: 2, name: 'Estrada para El Chaltén + Chorrillo e Miradores' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: 'Dia livre em El Calafate' })).toBeVisible()
 
   // 4. Client-side navigation through the menu.
   await page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name: 'Voos' }).click()

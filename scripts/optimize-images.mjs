@@ -26,8 +26,6 @@ const jobs = [
     'perito-moreno': 'perito_moreno.jpeg',
     'chorrillo-miradores': 'Miradoradores_Condores_Aguilas.jpg',
     'piedras-blancas-los-tres': 'glaciar-piedras-blancas.jpg',
-    'laguna-capri': 'laguna_capri.jpg',
-    'laguna-torre': 'laguna-torre.webp',
     'canal-beagle': 'canal-beagle.avif',
     'tierra-del-fuego': 'parque-nacional-tierra.jpg',
   }).map(([id, input]) => ({

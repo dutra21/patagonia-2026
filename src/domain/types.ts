@@ -48,7 +48,7 @@ export interface Stay {
 export type Difficulty = 'easy' | 'moderate' | 'hard'
 
 export interface Ticket {
-  /** What gets bought or used, e.g. "Flexipass Los Glaciares, 7 dias". */
+  /** What gets bought or used, e.g. "Flexipass Los Glaciares, 3 dias". */
   product: string
   price?: string
   website?: string
